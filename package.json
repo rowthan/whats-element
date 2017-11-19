@@ -1,0 +1,20 @@
+{
+  "name": "whats-element",
+  "version": "0.0.1",
+  "description": "a tool can compute a unique string identity id to location everyone element in web page.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "identifier",
+    "element",
+    "id"
+  ],
+  "author": "rowthan",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rowthan/whats-element.git"
+  }
+}
