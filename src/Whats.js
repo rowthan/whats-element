@@ -5,7 +5,14 @@ var whatselement;
 whatselement = (function () {
   function Whats() {
   }
-  Whats.getUniqueId = function (target,byParent=false) {
+  Whats.getUniqueId = function (target,prefix=false) {
+    //TODO target不为DOM对象的时候直接返回
+    //init result
+    let result = {
+      uniqueId:"",
+      queryType:""
+    };
+
     //construct data info of the target
     const id = target.id;
     const name = target.name;
@@ -18,11 +25,7 @@ whatselement = (function () {
     }
     const tag = target.tagName.toLowerCase();
     const type = target.type?target.type.toLowerCase():"";
-    //init result
-    let result = {
-      uniqueId:"",
-      queryType:""
-    };
+
     if(tag==="body"){
       result.uniqueId = tag;
       result.queryType="root";
@@ -31,7 +34,7 @@ whatselement = (function () {
     //location by id
     if(id){
       if(document.getElementById(id)===target){
-        result.uniqueId = byParent?tag+"#"+id:id;
+        result.uniqueId = prefix?tag+"#"+id:id;
         result.queryType = "byId";
       }
     }
@@ -70,7 +73,7 @@ whatselement = (function () {
       }
       if(document.querySelector(queryString)===target){
         result.uniqueId = queryString;
-        result.queryType = "mixed";
+        result.queryType = "byMixed";
       }
     }
     //location by order
@@ -141,6 +144,9 @@ whatselement = (function () {
       result.queryType = "byParent";
     }
     return result;
+  };
+  Whats.getTarget = function (queryString) {
+    return document.getElementById(queryString) || document.getElementsByName(queryString)[0] || document.querySelector(queryString)
   };
   return Whats;
 })();
