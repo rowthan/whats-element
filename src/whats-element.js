@@ -9,9 +9,23 @@ whatsElement = (function () {
     Whats.root = "body";
 
     var style = document.createElement("style");
-    let styleString = "#whats-element-tip-container{position: absolute;white-space: nowrap;background: #333740;color: #8ed3fb;font-size: 14px;z-index: 1000;background-color: rgba(255, 255, 255,0.95);box-sizing: border-box;box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 10px 3px;padding: 8px 20px;border-radius: 36px;}"
+    var styleString = "#whats-element-tip-container{position: absolute;white-space: nowrap;background: #333740;color: #8ed3fb;font-size: 14px;z-index: 1000;background-color: rgba(255, 255, 255,0.95);box-sizing: border-box;box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 10px 3px;padding: 8px 20px;border-radius: 36px;}"
         styleString += "#whats-element-tip-container::after{content:'';position:absolute;top:0;width: 0px;height: 0px;left: calc(50% - 8px);box-sizing: border-box;transform-origin: 0px 0px 0px;transform: rotate(-45deg);border-width: 6px;border-style: solid;border-color: rgb(255, 255, 255);border-image: initial;}"
+
+        styleString += "#whats-element-unique-container{display:flex;justify-content: space-around;}";
+        styleString += "#whats-element-unique-id{border:1px solid #d1d5da;border-radius:3px;box-shadow:inset 0 1px 2px rgba(27,31,35,0.075);background-color:#fff;line-height: 20px;text-indent:10px;}";
+        styleString += "#whats-element-copy{background:aliceblue;text-align: center;border-radius: 5px;cursor: pointer;}";
+        styleString += ".byId{color:#f20c00}";
+        styleString += ".byName{color:#4b5cc4}";
+        styleString += ".byValue{color:#75664d}";
+        styleString += ".byClass{color:#808080}";
+        styleString += ".byMixed{color:#a78e44}";
+        styleString += ".byOrder{color:#eedeb0}";
+        styleString += ".byParent{color:#edd1d8}";
+
         styleString += "#whats-element-inner-text{color:#ddd;max-width:200px;overflow:hidden;text-overflow:ellipsis;}";
+
+
     style.innerText = styleString;
     document.head.appendChild(style);
   }
@@ -37,7 +51,7 @@ whatsElement = (function () {
     var tag = target.tagName.toLowerCase();
     var type = target.type?target.type.toLowerCase():"";
 
-    if(tag==="body"){
+    if(tag==="body" || tag==="html"){
       result.uniqueId = tag;
       result.queryType="body";
     }
@@ -73,7 +87,7 @@ whatsElement = (function () {
       queryString = className ? queryString +className: queryString;
       queryString = name? queryString + "[name='"+name+"']": queryString;
       queryString = type ? queryString +  "[type='"+type+"']": queryString;
-      if(queryString!=tag && document.querySelector(queryString)===target){
+      if(document.querySelector(queryString)===target){
         result.uniqueId = queryString;
         result.queryType = "byMixed";
       }
@@ -151,20 +165,43 @@ whatsElement = (function () {
 
       tip.innerHTML = "";
 
-      var query = document.createElement("span");
-      query.id = "whats-element-unique-id";
-      query.innerText = result.uniqueId;
-      tip.appendChild(query);
 
-      /*var type = document.createElement("span");
+
+      var tipQueryContainer = document.createElement("div");
+      tipQueryContainer.id = "whats-element-unique-container";
+
+      var query = document.createElement("input");
+      query.id = "whats-element-unique-id";
+      query.className = result.queryType;
+      query.value = result.uniqueId;
+
+      var type = document.createElement("span");
       type.id = "whats-element-query-type";
+      type.className = result.queryType;
       type.innerText = result.queryType;
-      tip.appendChild(type);*/
+
+      var tipCopy = document.createElement("div");
+      tipCopy.id = "whats-element-copy";
+      tipCopy.innerText = "复制";
+      tipCopy.onclick=function () {
+        query.select();
+        document.execCommand("Copy");
+      };
+
+      tipQueryContainer.appendChild(query);
+      tipQueryContainer.appendChild(type);
+      tipQueryContainer.appendChild(tipCopy);
+
+
+
+      tip.appendChild(tipQueryContainer);
 
       var element = document.createElement("div");
       element.id = "whats-element-inner-text";
       element.innerText = Whats.getTarget(result.uniqueId).innerText;
       tip.appendChild(element);
+
+
 
       var left = target.getBoundingClientRect().left;
       var top = target.getBoundingClientRect().top + target.offsetHeight;
