@@ -1,9 +1,11 @@
 /**
  * Created by rowthan on 2017/11/19.
  */
-var whatselement;
-whatselement = (function () {
-  function Whats() {
+var whatsElement;
+whatsElement = (function () {
+  function Whats(draw,showConsole) {
+    this.draw = draw ? true : false;
+    this.showConsole = showConsole ? true : false;
   }
   Whats.getUniqueId = function (target,prefix=false) {
     //TODO target不为DOM对象的时候直接返回
@@ -143,6 +145,14 @@ whatselement = (function () {
       result.uniqueId = queryString;
       result.queryType = "byParent";
     }
+    if(showConsole){
+      console.log("该对象的唯一标识符是："+result.uniqueId);
+      console.log("定位该对象的方式为："+result.queryType);
+      console.log(Whats.getTarget(result.uniqueId));
+    }
+    if(draw){
+
+    }
     return result;
   };
   Whats.getTarget = function (queryString) {
@@ -151,13 +161,6 @@ whatselement = (function () {
   return Whats;
 })();
 
-if (typeof window !== "undefined" && window !== null) {
-  window.whatselement = whatselement;
-}
-
-if (typeof window === "undefined" || window === null) {
-  this.whatselement = whatselement;
-}
-module.exports = whatselement;
+window.whatsElement = whatsElement;
 
 
