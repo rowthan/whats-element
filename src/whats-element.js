@@ -2,10 +2,9 @@
  * Created by rowthan on 2017/11/19.
  */
 var whatsElement;
+//TODO 优化插件对象
 whatsElement = (function () {
-  function Whats(draw,showConsole) {
-    Whats.draw = draw === true;
-    Whats.showConsole = showConsole === true;
+  function Whats() {
     Whats.root = "body";
 
     var style = document.createElement("style");
@@ -23,8 +22,7 @@ whatsElement = (function () {
         styleString += ".byOrder{color:#eedeb0}";
         styleString += ".byParent{color:#edd1d8}";
 
-        styleString += "#whats-element-inner-text{color:#ddd;max-width:200px;overflow:hidden;text-overflow:ellipsis;}";
-
+        styleString += "#whats-element-inner-text{color:#ddd;max-width:200px;max-height:200px;overflow:hidden;text-overflow:ellipsis;}";
 
     style.innerText = styleString;
     document.head.appendChild(style);
@@ -32,7 +30,8 @@ whatsElement = (function () {
   Whats.getUniqueId = function (target,prefix) {
     var result = {
       uniqueId:"",
-      queryType:""
+      queryType:"",
+      draw:null
     };
     //not a htmlElement
     if(!(target instanceof HTMLElement)){
@@ -71,7 +70,6 @@ whatsElement = (function () {
       result.queryType = "byClass";
     }
      //for radio
-    //TODO select
     if(type === "radio"){
       var value = target.value;
       var queryString = tag+"[value='"+value+"']";
@@ -86,8 +84,7 @@ whatsElement = (function () {
       queryString = id ? queryString + "#"+id: queryString;
       queryString = className ? queryString +className: queryString;
       queryString = name? queryString + "[name='"+name+"']": queryString;
-      queryString = type ? queryString +  "[type='"+type+"']": queryString;
-      if(document.querySelector(queryString)===target){
+      if(Whats.getTarget(queryString)===target){
         result.uniqueId = queryString;
         result.queryType = "byMixed";
       }
@@ -152,20 +149,11 @@ whatsElement = (function () {
       result.uniqueId = queryString;
       result.queryType = "byParent";
     }
-    if(this.showConsole){
-      console.log("该对象的唯一标识符是："+result.uniqueId);
-      console.log("定位该对象的方式为："+result.queryType);
-      console.log(Whats.getTarget(result.uniqueId));
-    }
-    //TODO 将该运行结果渲染到页面上去 计算该元素是否为
-    if(this.draw){
 
+    result.draw = function () {
       var tip = document.getElementById("whats-element-tip-container") ? document.getElementById("whats-element-tip-container") :document.createElement("aside") ;
       tip.id = "whats-element-tip-container";
-
       tip.innerHTML = "";
-
-
 
       var tipQueryContainer = document.createElement("div");
       tipQueryContainer.id = "whats-element-unique-container";
@@ -192,16 +180,12 @@ whatsElement = (function () {
       tipQueryContainer.appendChild(type);
       tipQueryContainer.appendChild(tipCopy);
 
-
-
       tip.appendChild(tipQueryContainer);
 
       var element = document.createElement("div");
       element.id = "whats-element-inner-text";
       element.innerText = Whats.getTarget(result.uniqueId).innerText;
       tip.appendChild(element);
-
-
 
       var left = target.getBoundingClientRect().left;
       var top = target.getBoundingClientRect().top + target.offsetHeight;
@@ -212,12 +196,13 @@ whatsElement = (function () {
       tip.style.left = toLeft+"px";
       tip.style.top = top+window.scrollY+"px";
       document.body.prepend(tip);
-    }
+    };
     return result;
   };
   Whats.getTarget = function (queryString) {
     return document.getElementById(queryString) || document.getElementsByName(queryString)[0] || document.querySelector(queryString)
   };
+  Whats();
   return Whats;
 })();
 

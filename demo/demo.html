@@ -10,15 +10,10 @@
 <p>如果你在使用过程中发现 whats-element.js 不能计算出唯一标识符结果，或者计算出来的结果不正确，请 <a target="_blank" href="https://github.com/rowthan/whats-element/issues">issue</a>  </p>
 <script src="../src/whats-element.js"></script>
 <script>
-  const option = {
-    draw:true,
-    showConsole : true
-  };
-  whatsElement(true,true);
   document.addEventListener('mousedown', (event) => {
     if(event.button === 2){
       const target = event.target;
-      whatsElement.getUniqueId(target);
+      whatsElement.getUniqueId(target).draw();
     }
   });
 </script>
