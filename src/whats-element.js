@@ -14,6 +14,8 @@ whatsElement = (function () {
         styleString += "#whats-element-unique-container{display:flex;justify-content: space-around;}";
         styleString += "#whats-element-unique-id{border:1px solid #d1d5da;border-radius:3px;box-shadow:inset 0 1px 2px rgba(27,31,35,0.075);background-color:#fff;line-height: 20px;text-indent:10px;}";
         styleString += "#whats-element-copy{background:aliceblue;text-align: center;border-radius: 5px;cursor: pointer;}";
+        styleString += "#whats-element-copy::after{position: absolute;z-index: 1000000;padding: 0.1em 0.75em;color: #fff;text-align: center;text-shadow: none;text-transform: none;content:attr(query-type);background: #a88462;border-radius: 3px;opacity: 0;transition:all .5s}";
+        styleString += "#whats-element-copy:hover:after{display:inline-block;opacity: 1;}";
         styleString += ".byId{color:#f20c00}";
         styleString += ".byName{color:#4b5cc4}";
         styleString += ".byValue{color:#75664d}";
@@ -176,6 +178,7 @@ whatsElement = (function () {
 
       var tipCopy = document.createElement("div");
       tipCopy.id = "whats-element-copy";
+      tipCopy.setAttribute("query-type",result.queryType);
       tipCopy.innerText = "复制";
       tipCopy.onclick=function () {
         query.select();
