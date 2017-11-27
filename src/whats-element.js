@@ -8,9 +8,9 @@ whatsElement = (function () {
     Whats.root = "body";
 
     var style = document.createElement("style");
-    var styleString = "#whats-element-tip-container{position: absolute;white-space: nowrap;background: #333740;color: #8ed3fb;font-size: 14px;z-index: 1000;background-color: rgba(255, 255, 255,0.95);box-sizing: border-box;box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 10px 3px;padding: 8px 20px;border-radius: 36px;}"
-        styleString += "#whats-element-tip-container::after{content:'';position:absolute;top:0;width: 0px;height: 0px;left: calc(50% - 8px);box-sizing: border-box;transform-origin: 0px 0px 0px;transform: rotate(-45deg);border-width: 6px;border-style: solid;border-color: rgb(255, 255, 255);border-image: initial;}"
-
+    var styleString = "#whats-element-tip-container{position: absolute;white-space: nowrap;background: #333740;color: #8ed3fb;font-size: 14px;z-index: 1000;background-color: rgba(255, 255, 255,0.95);box-sizing: border-box;box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 10px 3px;padding: 10px 20px;border-radius: 36px;}"
+        styleString += "#whats-element-tip-delete{cursor: pointer;position: absolute;top: -10px;width: 20px;height: 20px;left: calc(50% - 8px);clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);background: #fff;text-align: center;}";
+        styleString += "#whats-element-tip-delete:hover{background:#fffbf0}";
         styleString += "#whats-element-unique-container{display:flex;justify-content: space-around;}";
         styleString += "#whats-element-unique-id{border:1px solid #d1d5da;border-radius:3px;box-shadow:inset 0 1px 2px rgba(27,31,35,0.075);background-color:#fff;line-height: 20px;text-indent:10px;}";
         styleString += "#whats-element-copy{background:aliceblue;text-align: center;border-radius: 5px;cursor: pointer;}";
@@ -22,7 +22,7 @@ whatsElement = (function () {
         styleString += ".byOrder{color:#eedeb0}";
         styleString += ".byParent{color:#edd1d8}";
 
-        styleString += "#whats-element-inner-text{color:#ddd;max-width:200px;max-height:200px;overflow:hidden;text-overflow:ellipsis;}";
+        styleString += "#whats-element-inner-text{color:#ddd;max-width:200px;max-height:100px;overflow:hidden;text-overflow:ellipsis;}";
 
     style.innerText = styleString;
     document.head.appendChild(style);
@@ -73,6 +73,9 @@ whatsElement = (function () {
     if(type === "radio"){
       var value = target.value;
       var queryString = tag+"[value='"+value+"']";
+      if(name){
+        queryString += "[name='"+name+"']"
+      }
       if(document.querySelector(queryString)===target){
         result.uniqueId = queryString;
         result.queryType = "byValue";
@@ -155,6 +158,14 @@ whatsElement = (function () {
       tip.id = "whats-element-tip-container";
       tip.innerHTML = "";
 
+      var deleteButton = document.createElement("div");
+      deleteButton.id = "whats-element-tip-delete";
+      deleteButton.innerText = 'x';
+      deleteButton.onclick = function () {
+        tip.outerHTML = "";
+      }
+      tip.appendChild(deleteButton);
+
       var tipQueryContainer = document.createElement("div");
       tipQueryContainer.id = "whats-element-unique-container";
 
@@ -162,11 +173,6 @@ whatsElement = (function () {
       query.id = "whats-element-unique-id";
       query.className = result.queryType;
       query.value = result.uniqueId;
-
-      var type = document.createElement("span");
-      type.id = "whats-element-query-type";
-      type.className = result.queryType;
-      type.innerText = result.queryType;
 
       var tipCopy = document.createElement("div");
       tipCopy.id = "whats-element-copy";
@@ -177,7 +183,6 @@ whatsElement = (function () {
       };
 
       tipQueryContainer.appendChild(query);
-      tipQueryContainer.appendChild(type);
       tipQueryContainer.appendChild(tipCopy);
 
       tip.appendChild(tipQueryContainer);
@@ -195,7 +200,7 @@ whatsElement = (function () {
       }
       tip.style.left = toLeft+"px";
       tip.style.top = top+window.scrollY+"px";
-      document.body.prepend(tip);
+      document.body.appendChild(tip);
     };
     return result;
   };
