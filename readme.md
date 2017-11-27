@@ -17,13 +17,6 @@ document.addEventListener('mousedown', (event) => {
     }
 });
 ```
-返回结果 
-```javascript
-result = {
-  uniqueId:"", // uniqueId 为最终的DOM元素在网页中的唯一标识符
-  queryType:"" // 结果为：byId,byName,byClass,byMixed,byOrder,byParent 其中一种
-}
-```
 
 ### 方式二、npm包引用
 安装依赖包
@@ -45,11 +38,12 @@ document.addEventListener('mousedown', (event) => {
 ```javascript
 const result = whatsElement.getUniqueId(target);
 ```
-result结果结构如下：
+返回结果 
 ```javascript
 result = {
   uniqueId:"", // uniqueId 为最终的DOM元素在网页中的唯一标识符
-  queryType:"" // 结果为：byId,byName,byClass,byMixed,byOrder,byParent 其中一种
+  queryType:"", // 结果为：byId,byName,byClass,byValue,byMixed,byOrder,byParent 其中一种
+  draw:function//返回一个方法，用户在页面上渲染出结果
 }
 ```
 * queryType === 'byId'：表示通过id可以定位到该元素。使用 `document.getElementById(result.uniqueId)` 获取该对象
@@ -57,11 +51,12 @@ result = {
 * 其他四种情况下，可以通过 `document.querySelector(result.uniqueId)` 获取对象  
 其中四种queryType分别代表：
 * byClass，可以通过 class 来定位该元素。如 `.username`
+* byValue，针对 radio 标签可以通过 value 定位，如 `input[value='male'][name='gender'']`
 * byMixed，只通过 id,class中的一种无法定位到该元素，需要联合使用 id,class 来定位。如 `input#user.username`
 * byOrder，通过序列号可以定位到元素，如 `div.title:nth-child(2)`
 * byParent，指不能元素自身所具备的特征值定位到本身，需要借助于父节点才能定位。如 `article>.title`
 
-其中 whats-element.js 还提供了一个获取DOM节点方法:
+此外 whats-element.js 还提供了一个获取DOM节点方法:
 ```javascript
 whatsElement.getTarget(result.uniqueId);//适用于任何queryType
 ```
