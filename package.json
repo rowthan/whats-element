@@ -16,5 +16,11 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/rowthan/whats-element.git"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-uglify": "^3.0.0",
+    "gulp-watch": "^4.3.11",
+    "pump": "^2.0.0"
   }
 }
