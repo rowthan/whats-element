@@ -4,7 +4,7 @@
 (function(window,undefined){
     var rootBody = "body",
     rootHTML = "html",
-    version="0.0.4",
+    version="0.0.5",
     whatsElement = function (argument) {
         this.options = Object.assign({},{
             draw:true
