@@ -8,14 +8,15 @@
 下载 whatselement.js   
 demo.html 中使用：
 ```javascript
-<script src="whats-element.js"></script>
+<script src="whatsElement.js"></script>
 
-document.addEventListener('mousedown', (event) => {
-    const target = event.target;
-    if (event.button === 2) {
-      const result = whatsElement.getUniqueId(target); //target 为DOM节点对象
+ var comput = new whats();
+  document.addEventListener('mousedown', (event) => {
+    if(event.button === 2){
+      const target = event.target;
+      comput.getUniqueId(target);
     }
-});
+  })
 ```
 
 ### 方式二、npm包引用
@@ -26,24 +27,24 @@ npm install whats-element --save
 demo.js
 ```javascript
 import whatsElement from 'whats-element';
-document.addEventListener('mousedown', (event) => {
-    const target = event.target;
-    if (event.button === 2) {
-      const result = whatsElement.getUniqueId(target);
+ var comput = new whatsElement();
+  document.addEventListener('mousedown', (event) => {
+    if(event.button === 2){
+      const target = event.target;
+      comput.getUniqueId(target);
     }
-});
+  })
 ```
 
 ## 运算结果
 ```javascript
-const result = whatsElement.getUniqueId(target);
+ result = whatsElement.getUniqueId(target);
 ```
 返回结果 
 ```javascript
 result = {
   uniqueId:"", // uniqueId 为最终的DOM元素在网页中的唯一标识符
-  queryType:"", // 结果为：byId,byName,byClass,byValue,byMixed,byOrder,byParent 其中一种
-  draw:function//返回一个方法，用户在页面上渲染出结果
+  queryType:"" // 结果为：byId,byName,byClass,byValue,byMixed,byOrder,byParent 其中一种
 }
 ```
 * queryType === 'byId'：表示通过id可以定位到该元素。使用 `document.getElementById(result.uniqueId)` 获取该对象
@@ -56,7 +57,18 @@ result = {
 * byOrder，通过序列号可以定位到元素，如 `div.title:nth-child(2)`
 * byParent，指不能元素自身所具备的特征值定位到本身，需要借助于父节点才能定位。如 `article>.title`
 
-此外 whats-element.js 还提供了一个获取DOM节点方法:
+
+##API
+whatsElement 提供以下方法
+* *`whatsElement.getTarget(queryString)`*  根据一个标识符获取一个HTML元素对象
+* *`whatsElement.getUniqueId(HTMLElement)`*  输入一个HTML对象，计算出它的唯一标识符、定位方式
+* *`whatsElement.draw(result)`*  根据 `whatsElement.getUniqueId(HTMLElement)`的结果在页面中渲染出结果信息。
+
+<img src="./img/draw.png" alt="whatsElement.draw(result)" >
+
+注：`whatsElement.getUniqueId(HTMLElement)`默认自动调用该方法。如果不希望在网页中渲染出结果信息，new 对象时，可如下使用：
 ```javascript
-whatsElement.getTarget(result.uniqueId);//适用于任何queryType
+var compute = new whatsElement({draw:false});//传入参数{draw:false}
+var result = comput.getUniqueId(HTMLElement);
 ```
+* *`whatsElement.clean()`*  删除 `whatsElement.draw()` 在网页中绘制的提示框。
