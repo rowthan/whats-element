@@ -1,8 +1,6 @@
 > 定位一个网页DOM元素，一般会通过 id,class,name 作为标识符，通过 `document.getElementById()`、`document.getElementByName()` 或 `document.querySelector()` 
 原生API来定位获取指定元素。而针对一些节点，如 `<span>文本</sapn>` 是否有方法定位到它们呢？ 
 
-理论上来说网页上的每一个元素一定存在一个用于定位到它的唯一标识符。 whats-element.js 就能够计算出任意一个DOM元素的唯一标识符。
-
 ## 使用方法
 ### 方式一、引入JavaScript文件
 下载 whatselement.js   
@@ -10,11 +8,11 @@ demo.html 中使用：
 ```javascript
 <script src="whatsElement.js"></script>
 
- var comput = new whats();
+ var whats = new whatsElement();
   document.addEventListener('mousedown', (event) => {
     if(event.button === 2){
       const target = event.target;
-      comput.getUniqueId(target);
+      const result = whats.getUniqueId(target);
     }
   })
 ```
@@ -58,7 +56,7 @@ result = {
 * byParent，指不能元素自身所具备的特征值定位到本身，需要借助于父节点才能定位。如 `article>.title`
 
 
-##API
+## API
 whatsElement 提供以下方法
 * *`whatsElement.getTarget(queryString)`*  根据一个标识符获取一个HTML元素对象
 * *`whatsElement.getUniqueId(HTMLElement)`*  输入一个HTML对象，计算出它的唯一标识符、定位方式

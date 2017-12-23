@@ -3,20 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <title>whats-element demo</title>
+  <link rel="stylesheet" href="demo.css">
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+  <!--<link href="//fonts.googleapis.com/css?family=Roboto:400,100,400italic,700italic,700" rel="stylesheet" type="text/css">-->
 </head>
 <body>
-<p>在你希望计算的DOM元素 <b>右击</b> ，whats-element.js 将会计算出鼠标所在的元素的唯一标识符。</p>
-<div id="tip">计算的结果会在该元素上方有提示</div>
-<p>如果你在使用过程中发现 whats-element.js 不能计算出唯一标识符结果，或者计算出来的结果不正确，请 <a target="_blank" href="https://github.com/rowthan/whats-element/issues">issue</a>  </p>
+  <header class="site__header island">
+    <div class="wrap">
+      <span id="animationSandbox" style="display: block;"><h1 class="site__title mega">whats-element.js</h1></span>
+      <span class="beta subhead">为每一个 HTML 元素计算出唯一标识符</span>
+    </div>
+  </header>
+  <main class="site__content island" >
+    <div class="wrap">
+      <hr>
+      <p>将鼠标移至任意元素上， <b>双击</b>或<b>右击</b>即可计算得出该HTML元素的唯一标识符</p>
+      <p class="meta"><a href="//github.com/rowthan/whats-element/blob/master/src/whatsElement.js">Download whatsElement.js</a> or
+        <a href="//github.com/rowthan/whats-element">View on GitHub</a></p>
+    </div>
+    <div class="example">
+      <h4>example</h4>
+    <pre>
+      <code>
+        &lt;script src="../dist/whatsElement.js"&gt;&lt;/script &gt;
+        &lt;script&gt;
+           var whats = new whatsElement();
+           document.addEventListener('dblclick',function (event) {
+             var result = whats.getUniqueId(event.target);
+             var elementId = result.uniqueId;// 该元素的唯一标识符
+             var queryType = result.queryType;// 定位该元素的类型，如 id,class,name...
+           })
+       &lt;/script&gt;
+      </code>
+    </pre>
+      <!--<iframe id="example" src="https://www.hao123.com/" frameborder="0"></iframe>-->
+    </div>
+  </main>
 <script src="../dist/whatsElement.js"></script>
+  <script
+          src="http://code.jquery.com/jquery-2.2.4.min.js"
+          integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+          crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>
-  var comput = new whats();
+    $(document).ready(function() {
+        $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+        });
+    });
+  var whats = new whatsElement();
   document.addEventListener('mousedown', (event) => {
     if(event.button === 2){
       const target = event.target;
-      comput.getUniqueId(target);
+      console.log(whats.getUniqueId(target));
     }
   })
+  document.addEventListener('dblclick',function (event) {
+      const target = event.target;
+      console.log(whats.getUniqueId(target));
+  })
+
+  $(document).ready(function() {
+      $('pre code').each(function(i, block) {
+          hljs.highlightBlock(block);
+      });
+  });
+
+ /* var frmDoc= document.getElementById("example");
+  //frmDoc.scripts[0].innerHTML="";
+  frmDoc.write("<script>alert('xxx')<\/script>");*/
+  /*var script = frmDoc.createElement("<script src='../dist/whatsElement.js'/>");*/
+  /*frmDoc.body.insertBefore(script);*/
 </script>
 </body>
 </html>
