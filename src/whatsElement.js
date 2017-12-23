@@ -9,9 +9,14 @@
         this.options = Object.assign({},{
             draw:true
         },argument) ;
+        //TODO 页面点击后自动刷新当前元素
+        this.target = document.body;
     };
     whatsElement.prototype.version = version;
     whatsElement.prototype.getUniqueId = function (element,parent) {
+        if(element===undefined){
+            element = this.target;
+        }
         if(!(element instanceof HTMLElement)){
             console.error && console.error("非法输入，不是一个HTML元素");
             return null;
@@ -155,6 +160,9 @@
         var tip = document.getElementById("whats-element-tip-container") ? document.getElementById("whats-element-tip-container") :document.createElement("aside") ;
         tip.id = "whats-element-tip-container";
         tip.innerHTML = "";
+        tip.addEventListener("click",function (e) {
+            e.stopPropagation();
+        });
 
         var deleteButton = document.createElement("div");
         deleteButton.id = "whats-element-tip-delete";
@@ -195,11 +203,17 @@
         var top = target.getBoundingClientRect().top + target.offsetHeight;
         var toLeft = left+window.screenX;
         if(toLeft>100){
-            toLeft = toLeft-tip.offsetWidth/2+target.offsetWidth/2;
+            toLeft = toLeft-(tip.offsetWidth|240)/2+target.offsetWidth/2;
         }
         tip.style.left = toLeft+"px";
         tip.style.top = top+window.scrollY+"px";
         document.body.appendChild(tip);
+
+        document.addEventListener('click', function (event) {
+            if(event.button === 0){
+                whatsElement.prototype.clean();
+            }
+        })
     };
     whatsElement.prototype.clean = function () {
         var container = document.getElementById("whats-element-tip-container");
@@ -209,7 +223,7 @@
     };
 
     if (typeof window !== "undefined" && window !== null) {
-       window.whats = window.whatsElement = whatsElement;
+       window.whatsElement = whatsElement;
     }
 
     if (typeof window === "undefined" || window === null) {
@@ -220,7 +234,7 @@
 
 
     var style = document.createElement("style");
-    var styleString = "#whats-element-tip-container{position: absolute;white-space: nowrap;background: #333740;color: #8ed3fb;font-size: 14px;z-index: 1000;background-color: rgba(255, 255, 255,0.95);box-sizing: border-box;box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 10px 3px;padding: 10px 20px;border-radius: 36px;}"
+    var styleString = "#whats-element-tip-container{position: fixed;white-space: nowrap;background: #333740;color: #8ed3fb;font-size: 14px;z-index: 1000;background-color: rgba(255, 255, 255,0.95);box-sizing: border-box;box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 10px 3px;padding: 10px 20px;border-radius: 36px;}"
     styleString += "#whats-element-tip-delete{cursor: pointer;position: absolute;top: -10px;width: 20px;height: 20px;left: calc(50% - 8px);clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);background: #fff;text-align: center;}";
     styleString += "#whats-element-tip-delete:hover{background:#fffbf0}";
     styleString += "#whats-element-unique-container{display:flex;justify-content: space-around;}";
