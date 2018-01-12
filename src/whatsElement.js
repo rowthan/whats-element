@@ -176,6 +176,7 @@
         tipQueryContainer.id = "whats-element-unique-container";
 
         var query = document.createElement("input");
+        query.readOnly = true;
         query.id = "whats-element-unique-id";
         query.className = result.queryType;
         query.value = result.uniqueId;
@@ -203,7 +204,7 @@
         var top = target.getBoundingClientRect().top + target.offsetHeight;
         var toLeft = left+window.screenX;
         if(toLeft>100){
-            toLeft = toLeft-(tip.offsetWidth|240)/2+target.offsetWidth/2;
+            toLeft = toLeft-(tip.offsetWidth|240)/2+target.offsetWidth/2-document.body.getBoundingClientRect().left;
         }
         tip.style.left = toLeft+"px";
         tip.style.top = top+window.scrollY+"px";
@@ -234,7 +235,7 @@
 
 
     var style = document.createElement("style");
-    var styleString = "#whats-element-tip-container{position: fixed;white-space: nowrap;background: #333740;color: #8ed3fb;font-size: 14px;z-index: 1000;background-color: rgba(255, 255, 255,0.95);box-sizing: border-box;box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 10px 3px;padding: 10px 20px;border-radius: 36px;}"
+    var styleString = "#whats-element-tip-container{position: absolute;white-space: nowrap;background: #333740;color: #8ed3fb;font-size: 14px;z-index: 1000;background-color: rgba(255, 255, 255,0.95);box-sizing: border-box;box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 10px 3px;padding: 10px 20px;border-radius: 36px;}"
     styleString += "#whats-element-tip-delete{cursor: pointer;position: absolute;top: -10px;width: 20px;height: 20px;left: calc(50% - 8px);clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);background: #fff;text-align: center;}";
     styleString += "#whats-element-tip-delete:hover{background:#fffbf0}";
     styleString += "#whats-element-unique-container{display:flex;justify-content: space-around;}";
