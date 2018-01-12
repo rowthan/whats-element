@@ -43,7 +43,14 @@
         }
         //location by id
         if(id && document.getElementById(id) === element){
-            result.uniqueId = parent?tag+"#"+id:id;
+            const regExp= new RegExp("^[a-zA-Z]+") ;
+            if(!parent){
+                result.uniqueId = id;
+            }
+            /*如果是最为父节点进行定位，需要加上 # 用于 querySelector() 查询，且符合 querySelector() 参数要求，以字母开头*/
+            else if(regExp.test(id)){
+                result.uniqueId = tag+"#"+id;
+            }
             result.queryType = "byId";
         }
         //location by name
@@ -71,7 +78,6 @@
         //location by mixed,order
         if(!result.uniqueId){
             var queryString = tag;
-            queryString = id ? queryString + "#"+id: queryString;
             queryString = className ? queryString +className: queryString;
             queryString = name? queryString + "[name='"+name+"']": queryString;
             if(whatsElement.prototype.getTarget(queryString)===element){
@@ -82,7 +88,6 @@
         //location by order
         if(!result.uniqueId){
             var queryString = tag;
-            queryString = id ? queryString + "#"+id : queryString;
             queryString = className ? queryString +className: queryString;
 
             var elements = document.querySelectorAll(queryString);
@@ -111,10 +116,7 @@
                 return;
             }
             var targetQuery = tag;
-            if(id){
-                targetQuery += "#"+id;
-            }
-            else if(className){
+            if(className){
                 targetQuery += className;
             }
             var queryString = parentQueryString+">"+targetQuery;
