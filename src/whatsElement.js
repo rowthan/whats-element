@@ -4,7 +4,7 @@
 (function(window,undefined){
     var rootBody = "body",
     rootHTML = "html",
-    version="0.0.5",
+    version="0.0.7",
     whatsElement = function (argument) {
         this.options = Object.assign({},{
             draw:true
@@ -43,7 +43,14 @@
         }
         //location by id
         if(id && document.getElementById(id) === element){
-            result.uniqueId = parent?tag+"#"+id:id;
+            const regExp= new RegExp("^[a-zA-Z]+") ;
+            if(!parent){
+                result.uniqueId = id;
+            }
+            /*如果是最为父节点进行定位，需要加上 # 用于 querySelector() 查询，且符合 querySelector() 参数要求，以字母开头*/
+            else if(regExp.test(id)){
+                result.uniqueId = tag+"#"+id;
+            }
             result.queryType = "byId";
         }
         //location by name
@@ -71,7 +78,6 @@
         //location by mixed,order
         if(!result.uniqueId){
             var queryString = tag;
-            queryString = id ? queryString + "#"+id: queryString;
             queryString = className ? queryString +className: queryString;
             queryString = name? queryString + "[name='"+name+"']": queryString;
             if(whatsElement.prototype.getTarget(queryString)===element){
@@ -82,7 +88,6 @@
         //location by order
         if(!result.uniqueId){
             var queryString = tag;
-            queryString = id ? queryString + "#"+id : queryString;
             queryString = className ? queryString +className: queryString;
 
             var elements = document.querySelectorAll(queryString);
@@ -111,10 +116,7 @@
                 return;
             }
             var targetQuery = tag;
-            if(id){
-                targetQuery += "#"+id;
-            }
-            else if(className){
+            if(className){
                 targetQuery += className;
             }
             var queryString = parentQueryString+">"+targetQuery;
@@ -176,6 +178,7 @@
         tipQueryContainer.id = "whats-element-unique-container";
 
         var query = document.createElement("input");
+        query.readOnly = true;
         query.id = "whats-element-unique-id";
         query.className = result.queryType;
         query.value = result.uniqueId;
@@ -203,7 +206,7 @@
         var top = target.getBoundingClientRect().top + target.offsetHeight;
         var toLeft = left+window.screenX;
         if(toLeft>100){
-            toLeft = toLeft-(tip.offsetWidth|240)/2+target.offsetWidth/2;
+            toLeft = toLeft-(tip.offsetWidth|240)/2+target.offsetWidth/2-document.body.getBoundingClientRect().left;
         }
         tip.style.left = toLeft+"px";
         tip.style.top = top+window.scrollY+"px";
@@ -234,7 +237,7 @@
 
 
     var style = document.createElement("style");
-    var styleString = "#whats-element-tip-container{position: fixed;white-space: nowrap;background: #333740;color: #8ed3fb;font-size: 14px;z-index: 1000;background-color: rgba(255, 255, 255,0.95);box-sizing: border-box;box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 10px 3px;padding: 10px 20px;border-radius: 36px;}"
+    var styleString = "#whats-element-tip-container{position: absolute;white-space: nowrap;background: #333740;color: #8ed3fb;font-size: 14px;z-index: 1000;background-color: rgba(255, 255, 255,0.95);box-sizing: border-box;box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 10px 3px;padding: 10px 20px;border-radius: 36px;}"
     styleString += "#whats-element-tip-delete{cursor: pointer;position: absolute;top: -10px;width: 20px;height: 20px;left: calc(50% - 8px);clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);background: #fff;text-align: center;}";
     styleString += "#whats-element-tip-delete:hover{background:#fffbf0}";
     styleString += "#whats-element-unique-container{display:flex;justify-content: space-around;}";

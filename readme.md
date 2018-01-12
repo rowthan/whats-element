@@ -70,3 +70,6 @@ var compute = new whatsElement({draw:false});//传入参数{draw:false}
 var result = comput.getUniqueId(HTMLElement);
 ```
 * *`whatsElement.clean()`*  删除 `whatsElement.draw()` 在网页中绘制的提示框。
+
+TODO 绘制该元素的相关信息，如高度宽度背景图片,右侧缩略位点
+将关闭按钮设置为 固定住按钮。固定后可以拖拽
