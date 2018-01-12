@@ -16,12 +16,12 @@ body {
 }
 
 input, select, button, textarea {
-    -webkit-appearance: none;
+   /* -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
 
     font: inherit;
-    color: inherit;
+    color: inherit;*/
 }
 
 /*-----------------------------------*\
@@ -131,7 +131,7 @@ a:hover {
 }
 
 .island {
-    padding: 1.5rem;
+    padding: 1.5em 1.5em 0 1.5em;
 }
 
 .isle {
@@ -220,3 +220,32 @@ html {
 }
 
 @keyframes bounceInUp{0%,60%,75%,90%,to{animation-timing-function:cubic-bezier(.215,.61,.355,1)}0%{opacity:0;transform:translate3d(0,3000px,0)}60%{opacity:1;transform:translate3d(0,-20px,0)}75%{transform:translate3d(0,10px,0)}90%{transform:translate3d(0,-5px,0)}to{transform:translateZ(0)}}
+
+.demo{
+    background: #f3f9f1;
+}
+
+.demo span{
+    display: inline-block;
+    width: 140px;
+    background: antiquewhite;
+    font-size: 14px;
+    border-radius: 4px;
+    height: 50px;
+    overflow: auto;
+}
+.demo b{
+    color:#3db1e8;
+}
+.demo b:after{
+    content: "";
+    display: block;
+}
+.demo .special{
+    color:red;
+}
+.tip{
+    font-size: 14px;
+    text-align: left;
+    white-space: pre-wrap;
+}
