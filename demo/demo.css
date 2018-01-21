@@ -4,6 +4,7 @@
 
 body {
     overflow-x: hidden;
+    font-size: 14px;
 }
 
 *, :before, :after {
@@ -99,7 +100,7 @@ h2, .beta {
     text-align: center;
 }
 
-p, hr, form {
+hr, form {
     margin-bottom: 1.5rem;
 }
 
@@ -222,10 +223,11 @@ html {
 @keyframes bounceInUp{0%,60%,75%,90%,to{animation-timing-function:cubic-bezier(.215,.61,.355,1)}0%{opacity:0;transform:translate3d(0,3000px,0)}60%{opacity:1;transform:translate3d(0,-20px,0)}75%{transform:translate3d(0,10px,0)}90%{transform:translate3d(0,-5px,0)}to{transform:translateZ(0)}}
 
 .demo{
+    padding: 10px;
     background: #f3f9f1;
 }
 
-.demo span{
+.demo span,.demo aside{
     display: inline-block;
     width: 140px;
     background: antiquewhite;
@@ -233,6 +235,10 @@ html {
     border-radius: 4px;
     height: 50px;
     overflow: auto;
+}
+.demo aside{
+    width: 100%;
+    height: auto;
 }
 .demo b{
     color:#3db1e8;
