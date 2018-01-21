@@ -1,19 +1,17 @@
-> 定位一个网页DOM元素，一般会通过 id,class,name 作为标识符，通过 `document.getElementById()`、`document.getElementByName()` 或 `document.querySelector()` 
-原生API来定位获取指定元素。而针对一些节点，如 `<span>文本</sapn>` 是否有方法定位到它们呢？ 
+> 定位一个网页DOM元素，一般会以 id,class,name 作为标识符，通过 `document.getElementById()`、`document.getElementByName()` 、 `document.querySelector()` 
+原生API来定位获取指定元素。而针对一些无任何标识的节点，如 `<span>文本</sapn>` 是否有方法定位到它们呢？ 
 
 ## 使用方法
 ### 方式一、引入JavaScript文件
-下载 whatselement.js   
-demo.html 中使用：
+
+demo.html
 ```javascript
 <script src="whatsElement.js"></script>
 
  var whats = new whatsElement();
   document.addEventListener('mousedown', (event) => {
-    if(event.button === 2){
-      const target = event.target;
-      const result = whats.getUniqueId(target);
-    }
+     const target = event.target;
+     const result = whats.getUniqueId(target);
   })
 ```
 
@@ -25,12 +23,10 @@ npm install whats-element --save
 demo.js
 ```javascript
 import whatsElement from 'whats-element';
- var comput = new whatsElement();
+ var whats = new whatsElement();
   document.addEventListener('mousedown', (event) => {
-    if(event.button === 2){
-      const target = event.target;
-      comput.getUniqueId(target);
-    }
+     const target = event.target;
+     const result = whats.getUniqueId(target);
   })
 ```
 
@@ -71,5 +67,5 @@ var result = comput.getUniqueId(HTMLElement);
 ```
 * *`whatsElement.clean()`*  删除 `whatsElement.draw()` 在网页中绘制的提示框。
 
-TODO 绘制该元素的相关信息，如高度宽度背景图片,右侧缩略位点
-将关闭按钮设置为 固定住按钮。固定后可以拖拽
+## TODO
+计算元素属性值，如长宽高、元素位于页面中的绝对位置。
