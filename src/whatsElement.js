@@ -4,7 +4,7 @@
 (function(window,undefined){
     var rootBody = "body",
     rootHTML = "html",
-    version="0.0.7",
+    version="0.0.9",
     whatsElement = function (argument) {
         this.options = Object.assign({},{
             draw:true
@@ -14,9 +14,6 @@
     };
     whatsElement.prototype.version = version;
     whatsElement.prototype.getUniqueId = function (element,parent) {
-        if(element===undefined){
-            element = this.target;
-        }
         if(!(element instanceof HTMLElement)){
             console.error && console.error("非法输入，不是一个HTML元素");
             return null;
@@ -43,7 +40,7 @@
         }
         //location by id
         if(id && document.getElementById(id) === element){
-            const regExp= new RegExp("^[a-zA-Z]+") ;
+            var regExp= new RegExp("^[a-zA-Z]+") ;
             if(!parent){
                 result.uniqueId = id;
             }
@@ -152,8 +149,10 @@
     };
     whatsElement.prototype.draw = function (result) {
         if(!result){
+            console.log("no result");
             return;
         }
+        console.log("draw");
         var target = whatsElement.prototype.getTarget(result.uniqueId);
         if(!target){
             console.error && console.error("不存在该HTML对象，无法绘制");
@@ -212,15 +211,16 @@
         tip.style.top = top+window.scrollY+"px";
         document.body.appendChild(tip);
 
-        document.addEventListener('click', function (event) {
-            if(event.button === 0){
+        document.onclick = function (event) {
+            if(event.target != target){
                 whatsElement.prototype.clean();
             }
-        })
+        }
     };
     whatsElement.prototype.clean = function () {
         var container = document.getElementById("whats-element-tip-container");
         if(container){
+            console.log("clean");
             container.parentNode.removeChild(container);
         }
     };

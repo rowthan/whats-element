@@ -12,7 +12,7 @@
   <header class="site__header island">
     <div class="wrap">
       <span id="animationSandbox" style="display: block;"><h1 class="site__title mega">whats-element.js</h1></span>
-      <span class="beta subhead">每一个 HTML 元素都是唯一</span>
+      <span class="beta subhead">为每一个 HTML 元素计算唯一标识符</span>
     </div>
     <p class="meta"><a href="//github.com/rowthan/whats-element/blob/master/src/whatsElement.js">Download whatsElement.js</a> or
       <a href="//github.com/rowthan/whats-element">View on GitHub</a>
@@ -21,11 +21,11 @@
   <main class="site__content island" >
     <div class="wrap">
       <hr>
-      <p>点击下列区域预览计算结果</p>
+      <p>点击下列<b>粉色内</b>区域预览计算结果</p>
       <section class="demo">
         <div class="id-locate">
-          <p style="text-align: left">元素本身具备 id 属性情况下：</p>
-          <span id="singleId">id=<b>singleId</b><div>id唯一</div></span>
+          <p style="text-align: left">元素本身具备 id 属性情况下：(点击 id=)</p>
+          <span id="singleId">id=<b>singleId</b>id唯一</span>
           <span id="multiId">id=<b>multiId</b>id不唯一时</span>
           <span id="multiId">id=<b class="special">multiId</b>与前一个元素id相同</span>
           <span id="1">id=<b>1</b>  id为数字</span>
@@ -45,36 +45,56 @@
         </div>
         <div>
           <p style="text-align: left">具备 name 属性情况下：</p>
-          <input type="text" name="username" placeholder="name='username'">
-          <input type="text" name="username" placeholder="name 不唯一时">
+          <aside>
+            <input type="text" name="username" readonly="readonly" placeholder="name='username'">
+          </aside>
+          <aside>
+            <input type="text" name="username" readonly="readonly" placeholder="name 不唯一时">
+          </aside>
         </div>
         <div>
           <p style="text-align: left">radio 具备value属性时：</p>
-          <input type="radio"  value="male"/> value="male"
-          <input type="radio" value="female"/> value="female"
-          <input type="radio" value="male"/> <b class="special">value 不唯一时</b>
+          <aside>
+            <input type="radio"  value="male" /> value="male"
+          </aside>
+          <aside>
+            <input type="radio" value="female"/> value="female"
+          </aside>
+          <aside>
+            <input type="radio" value="male"/> <b class="special">value 不唯一时</b>
+          </aside>
         </div>
         <div>
           <p style="text-align: left">元素具备 name、class 但都不能唯一标识时</p>
-          <input type="radio" name="username" value="a"> name="username" value="a"
-          <input type="radio" name="username" value="b"> name="username" value="b"
-          <input type="radio" name="password" value="b"> name="password" value="b"
+          <aside>
+            <input type="radio" name="username" value="a"> name="username" value="a"
+          </aside>
+         <aside>
+           <input type="radio" name="username" value="b"> name="username" value="b"
+         </aside>
+          <aside>
+            <input type="radio" name="password" value="b"> name="password" value="b"
+          </aside>
         </div>
       </section>
     </div>
     <p class="tip">
       HTML 中的元素可能具备 id,class,name,value,type 等，甚至不具备任何属性。或许多个 HTML 元素具备相同的属性，不具备唯一标识的条件。
-      无论是何种情况 whatsElement.js 都能够正确的运算出该 HTML 元素在该页面中的唯一标识符，计算出的结果，通过三个原生API
-      document.getElementById(),document.getElementsByName()[0], document.querySelector() 获取到该元素。
+      无论是何种情况 whatsElement.js 都能够正确的运算出该 HTML 元素在该页面中的唯一标识符，计算出的结果，可通过一下三个原生API 获取到该元素。
+      <ul style="text-align: left">
+        <li>document.getElementById()</li>
+        <li>document.getElementsByName()[0]</li>
+        <li>document.querySelector()</li>
+      </ul>
     </p>
     <div class="example">
-      <h4>usage</h4>
+      <h4>使用</h4>
     <pre>
       <code>
         &lt;script src="../dist/whatsElement.js"&gt;&lt;/script &gt;
         &lt;script&gt;
            var whats = new whatsElement();
-           document.addEventListener('dblclick',function (event) {
+           document.addEventListener('click',function (event) {
              var result = whats.getUniqueId(event.target);
              var elementId = result.uniqueId;// 该元素的唯一标识符
              var queryType = result.queryType;// 定位该元素的类型，如 id,class,name...
@@ -89,10 +109,10 @@
 <script src="highlight.pack.js"></script>
 <script>
   var whats = new whatsElement();
-  $(".demo span").dblclick(function(event){
+  $(".demo span").click(function(event){
     console.log(whats.getUniqueId(event.currentTarget));
   });
-  $(".demo input").dblclick(function(event){
+  $(".demo input").click(function(event){
     console.log(whats.getUniqueId(event.currentTarget));
   });
 
