@@ -11,7 +11,7 @@ demo.html
  var whats = new whatsElement();
   document.addEventListener('mousedown', (event) => {
      const target = event.target;
-     const result = whats.getUniqueId(target);
+     const result = whats.getUniqueId(target);//当 getUniqueId()参数为空时候，默认计算鼠标点击到的最后一个HTML元素。
   })
 ```
 
