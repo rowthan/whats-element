@@ -95,7 +95,7 @@
         &lt;script&gt;
            var whats = new whatsElement();
            document.addEventListener('click',function (event) {
-             var result = whats.getUniqueId(event.target);
+             var result = whats.getUniqueId();//可选传入参数 event.target，当不传入参数时，默认计算最后一次鼠标点击到的HTML元素。
              var elementId = result.uniqueId;// 该元素的唯一标识符
              var queryType = result.queryType;// 定位该元素的类型，如 id,class,name...
            })
@@ -113,17 +113,15 @@
           s.parentNode.insertBefore(hm, s);
       })();
   </script>
-<script src="../src/whatsElement.js"></script>
+<script src="../dist/whatsElement.js"></script>
 <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
 <script src="highlight.pack.js"></script>
 <script>
   var whats = new whatsElement();
-  $(".demo span").click(function(event){
-    console.log(whats.getUniqueId(event.currentTarget));
-  });
-  $(".demo input").click(function(event){
-    console.log(whats.getUniqueId(event.currentTarget));
-  });
+  document.addEventListener('click',function (event) {
+      whats.getUniqueId();//event.target
+  })
+
 
   $(document).ready(function() {
     $('pre code').each(function(i, block) {

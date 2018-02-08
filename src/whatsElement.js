@@ -4,16 +4,20 @@
 (function(window,undefined){
     var rootBody = "body",
     rootHTML = "html",
-    version="0.0.9",
+    version="1.0.1",
     whatsElement = function (argument) {
         this.options = Object.assign({},{
             draw:true
         },argument) ;
-        //TODO 页面点击后自动刷新当前元素
-        this.target = document.body;
+        this.focusedTarget = document.body;
+        var that = this;
+        document.addEventListener('mousedown', function(event){
+            that.focusedTarget = event.target;
+        });
     };
     whatsElement.prototype.version = version;
     whatsElement.prototype.getUniqueId = function (element,parent) {
+        element = element ? element : this.focusedTarget;
         if(!(element instanceof HTMLElement)){
             console.error && console.error("非法输入，不是一个HTML元素");
             return null;
@@ -152,7 +156,6 @@
             console.log("no result");
             return;
         }
-        console.log("draw");
         var target = whatsElement.prototype.getTarget(result.uniqueId);
         if(!target){
             console.error && console.error("不存在该HTML对象，无法绘制");
