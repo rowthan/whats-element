@@ -1,99 +1,104 @@
 /**
  * Created by rowthan on 2017/12/9.
  */
-(function(window,undefined){
-    var rootBody = "body",
+(function(w,undefined){
+    var doc = w.document,
+    rootBody = "body",
     rootHTML = "html",
-    version="1.0.1",
+    PREFIX = 'whats-element',
+    containerID = 'whats-element-tip-container',
     whatsElement = function (argument) {
         this.options = Object.assign({},{
             draw:true
-        },argument) ;
-        this.focusedTarget = document.body;
-        var that = this;
-        document.addEventListener('mousedown', function(event){
-            that.focusedTarget = event.target;
-        });
-    };
-    whatsElement.prototype.version = version;
-    whatsElement.prototype.getUniqueId = function (element,parent) {
-        element = element ? element : this.focusedTarget;
+        },argument)
+        this.lastClick = doc.body
+        this.focusedElement = null
+        var that = this
+        /**点击其他地方时，清除*/
+        doc.addEventListener('click', function(event){
+            that.lastClick = event.target
+            if(that.focusedElement!=null && that.focusedElement!=event.target){
+              o.clean()
+            }
+        })
+    },
+    o = whatsElement.prototype
+    o.version = '1.0.1'
+    o.getUniqueId = function (element,parent) {
+        element = element ? element : this.lastClick;
         if(!(element instanceof HTMLElement)){
-            console.error && console.error("非法输入，不是一个HTML元素");
+            console.error("invalid input,not a HTML element");
             return null;
         }
         var result = {
-            uniqueId:"",
-            queryType:""
-        };
+            wid:"",
+            type:""
+        },
         //construct data info of the element
-        var id = element.id;
-        var name = element.name;
-        var className = "";
-        var classList = element.classList;
-        if(classList){
-            classList.forEach(function (item) {
-                className = className+"."+item;
-            });
-        }
-        var tag = element.tagName.toLowerCase();
-        var type = element.type?element.type.toLowerCase():"";
+          id = element.id,
+          name = element.name,
+          tag = element.tagName.toLowerCase(),
+          type = element.type?element.type.toLowerCase():"",
+          className = "",
+          classList = element.classList || [];
+          classList.forEach(function (item) {
+            className = className+"."+item;
+          })
         if(tag===rootBody || tag=== rootHTML){
-            result.uniqueId = tag;
-            result.queryType= tag;
+            result.wid = tag;
+            result.type= tag;
         }
         //location by id
-        if(id && document.getElementById(id) === element){
+        if(id && doc.getElementById(id) === element){
             var regExp= new RegExp("^[a-zA-Z]+") ;
             if(!parent){
-                result.uniqueId = id;
+                result.wid = id;
             }
             /*如果是最为父节点进行定位，需要加上 # 用于 querySelector() 查询，且符合 querySelector() 参数要求，以字母开头*/
             else if(regExp.test(id)){
-                result.uniqueId = tag+"#"+id;
+                result.wid = tag+"#"+id
             }
-            result.queryType = "byId";
+            result.type = "byId"
         }
         //location by name
-        if(!result.uniqueId && name && document.getElementsByName(name)[0] === element){
-            result.uniqueId = name;
-            result.queryType = "byName";
+        if(!result.wid && name && doc.getElementsByName(name)[0] === element){
+            result.wid = name;
+            result.type = "byName"
         }
         //location by class
-        if(!result.uniqueId && className && document.querySelector(tag+className)===element){
-            result.uniqueId = tag+className;
-            result.queryType = "byClass";
+        if(!result.wid && className && doc.querySelector(tag+className)===element){
+            result.wid = tag+className;
+            result.type = "byClass"
         }
         //for radio
         if(type === "radio"){
-            var value = element.value;
-            var queryString = tag+"[value='"+value+"']";
+            var value = element.value,queryString = tag+"[value='"+value+"']"
             if(name){
                 queryString += "[name='"+name+"']"
             }
-            if(document.querySelector(queryString)===element){
-                result.uniqueId = queryString;
-                result.queryType = "byValue";
+            if(doc.querySelector(queryString)===element){
+                result.wid = queryString
+                result.type = "byValue"
             }
         }
         //location by mixed,order
-        if(!result.uniqueId){
+        if(!result.wid){
             var queryString = tag;
-            queryString = className ? queryString +className: queryString;
-            queryString = name? queryString + "[name='"+name+"']": queryString;
-            if(whatsElement.prototype.getTarget(queryString)===element){
-                result.uniqueId = queryString;
-                result.queryType = "byMixed";
+            queryString = className ? queryString +className: queryString
+            queryString = name? queryString + "[name='"+name+"']": queryString
+            if(o.getTarget(queryString)===element){
+                result.wid = queryString
+                result.type = "byMixed"
             }
         }
         //location by order
-        if(!result.uniqueId){
-            var queryString = tag;
-            queryString = className ? queryString +className: queryString;
+        if(!result.wid){
+            var queryString = tag
+            queryString = className ? queryString +className: queryString
 
-            var elements = document.querySelectorAll(queryString);
+            var elements = doc.querySelectorAll(queryString)
             if(elements && elements.length>0){
-                var index = null;
+                var index = null
                 for(var i=0; i<elements.length; i++){
                     if(element===elements[i]){
                         index = i+1;
@@ -101,18 +106,18 @@
                     }
                 }
                 if(index){
-                    queryString = queryString + ":nth-child("+index+")";
-                    if(document.querySelector(queryString) === element){
-                        result.uniqueId = queryString;
-                        result.queryType = "byOrder";
+                    queryString = queryString + ":nth-child("+index+")"
+                    if(doc.querySelector(queryString) === element){
+                        result.wid = queryString
+                        result.type = "byOrder"
                     }
                 }
             }
         }
         //location by parent
-        if(!result.uniqueId){
-            var parentQueryResult = whatsElement.prototype.getUniqueId(element.parentNode,true);
-            var parentQueryString = parentQueryResult.uniqueId;
+        if(!result.wid){
+            var parentQueryResult = whatsElement.prototype.getUniqueId(element.parentNode,true),
+              parentQueryString = parentQueryResult.wid;
             if(!parentQueryString){
                 return;
             }
@@ -120,78 +125,75 @@
             if(className){
                 targetQuery += className;
             }
-            var queryString = parentQueryString+">"+targetQuery;
-            var queryElements = document.querySelectorAll(queryString);
+            var queryString = parentQueryString+">"+targetQuery,
+              queryElements = doc.querySelectorAll(queryString);
             if(queryElements.length>1){
                 queryString = null;
                 var index = null;
-                for(var i=0; i<element.parentNode.children.length; i++){
-                    if(element.parentNode.children[i]===element){
-                        index = i+1;
+                for(var j=0; j<element.parentNode.children.length; j++){
+                    if(element.parentNode.children[j]===element){
+                        index = j+1;
                         break;
                     }
                 }
                 if(index>=1){
                     queryString = parentQueryString+">"+ targetQuery + ":nth-child("+index+")";
-                    var queryTarget = document.querySelector(queryString);
+                    var queryTarget = doc.querySelector(queryString);
                     if(queryTarget!=element){
                         queryString = null;
                     }
                 }
             }
-            result.uniqueId = queryString;
-            result.queryType = "byParent";
+            result.wid = queryString
+            result.type = "byParent"
         }
 
+        this.focusedElement = o.getTarget(result.wid);
         if(!parent && this.options.draw ){
             whatsElement.prototype.draw(result);
         }
-        return result;
-    };
-    whatsElement.prototype.getTarget = function (queryString) {
-        return document.getElementById(queryString) || document.getElementsByName(queryString)[0] || document.querySelector(queryString);
-    };
-    whatsElement.prototype.draw = function (result) {
-        if(!result){
-            console.log("no result");
-            return;
-        }
-        var target = whatsElement.prototype.getTarget(result.uniqueId);
+        return result
+    }
+    o.getTarget = function (queryString) {
+        return doc.getElementById(queryString) || doc.getElementsByName(queryString)[0] || doc.querySelector(queryString);
+    }
+    o.draw = function (result) {
+        var target = o.getTarget(result.wid);
         if(!target){
-            console.error && console.error("不存在该HTML对象，无法绘制");
+            console.error("不存在该HTML对象，无法绘制");
             return;
         }
-        var tip = document.getElementById("whats-element-tip-container") ? document.getElementById("whats-element-tip-container") :document.createElement("aside") ;
-        tip.id = "whats-element-tip-container";
-        tip.innerHTML = "";
+        var tip = doc.getElementById(containerID) ? doc.getElementById(containerID) :doc.createElement("aside")
+        tip.id = containerID
+        tip.innerHTML = ""
         tip.addEventListener("click",function (e) {
             e.stopPropagation();
-        });
+        })
 
-        var deleteButton = document.createElement("div");
-        deleteButton.id = "whats-element-tip-delete";
+        var deleteButton = doc.createElement("div")
+        deleteButton.id = "whats-element-tip-delete"
         deleteButton.innerText = 'x';
         deleteButton.onclick = function () {
-            tip.outerHTML = "";
+          whatsElement.prototype.clean();
         }
         tip.appendChild(deleteButton);
 
-        var tipQueryContainer = document.createElement("div");
+        var tipQueryContainer = doc.createElement("div");
         tipQueryContainer.id = "whats-element-unique-container";
 
-        var query = document.createElement("input");
+        var query = doc.createElement("input");
         query.readOnly = true;
         query.id = "whats-element-unique-id";
-        query.className = result.queryType;
-        query.value = result.uniqueId;
+        query.className = result.type;
+        query.value = result.wid;
 
-        var tipCopy = document.createElement("div");
+        var tipCopy = doc.createElement("div");
         tipCopy.id = "whats-element-copy";
-        tipCopy.setAttribute("query-type",result.queryType);
+        tipCopy.setAttribute("query-type",result.type);
         tipCopy.innerText = "复制";
         tipCopy.onclick=function () {
             query.select();
-            document.execCommand("Copy");
+            doc.execCommand("Copy");
         };
 
         tipQueryContainer.appendChild(query);
@@ -199,48 +201,46 @@
 
         tip.appendChild(tipQueryContainer);
 
-        var element = document.createElement("div");
+        var element = doc.createElement("div");
         element.id = "whats-element-inner-text";
-        element.innerText = whatsElement.prototype.getTarget(result.uniqueId).innerText;
+        element.innerText = o.getTarget(result.wid).innerText;
         tip.appendChild(element);
 
-        var left = target.getBoundingClientRect().left;
-        var top = target.getBoundingClientRect().top + target.offsetHeight;
-        var toLeft = left+window.screenX;
-        if(toLeft>100){
-            toLeft = toLeft-(tip.offsetWidth|240)/2+target.offsetWidth/2-document.body.getBoundingClientRect().left;
-        }
+        var
+        top = target.getBoundingClientRect().top + target.offsetHeight,
+        tempLeft = target.getBoundingClientRect().left+w.screenX,
+        toLeft = tempLeft<100?tempLeft:tempLeft-(tip.offsetWidth|240)/2+target.offsetWidth/2-doc.body.getBoundingClientRect().left;
         tip.style.left = toLeft+"px";
-        tip.style.top = top+window.scrollY+"px";
-        document.body.appendChild(tip);
-
-        document.onclick = function (event) {
-            if(event.target != target){
-                whatsElement.prototype.clean();
-            }
-        }
+        tip.style.top = top+w.scrollY+10+"px";
+        doc.body.appendChild(tip);
+        revertStyle();
+        target.classList.add('whats-element-active');
     };
-    whatsElement.prototype.clean = function () {
-        var container = document.getElementById("whats-element-tip-container");
+    o.clean = function () {
+        revertStyle();
+        var container = doc.getElementById(containerID);
         if(container){
-            console.log("clean");
-            container.parentNode.removeChild(container);
+            container.outerHTML='';
         }
     };
 
-    if (typeof window !== "undefined" && window !== null) {
-       window.whatsElement = whatsElement;
+    function revertStyle(){
+      doc.querySelectorAll("."+PREFIX+"-active").forEach(function(element){
+        element.classList.remove(PREFIX+'-active');
+      })
     }
 
-    if (typeof window === "undefined" || window === null) {
+    if (typeof w !== "undefined" && w !== null) {
+       w.whatsElement = whatsElement;
+    }
+    if (typeof w === "undefined" || w === null) {
         this.whatsElement = whatsElement;
     }
     if (typeof module !== 'undefined' && module.exports) module.exports = whatsElement;
     if (typeof define === 'function') define(function() { return whatsElement; });
 
-
-    var style = document.createElement("style");
-    var styleString = "#whats-element-tip-container{position: absolute;white-space: nowrap;background: #333740;color: #8ed3fb;font-size: 14px;z-index: 1000;background-color: rgba(255, 255, 255,0.95);box-sizing: border-box;box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 10px 3px;padding: 10px 20px;border-radius: 36px;}"
+    var style = doc.createElement("style"),
+    styleString = "#whats-element-tip-container{position: absolute;white-space: nowrap;background: #333740;color: #8ed3fb;font-size: 14px;z-index: 1000;background-color: rgba(255, 255, 255,0.95);box-sizing: border-box;box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 10px 3px;padding: 10px 20px;border-radius: 36px;}"
     styleString += "#whats-element-tip-delete{cursor: pointer;position: absolute;top: -10px;width: 20px;height: 20px;left: calc(50% - 8px);clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);background: #fff;text-align: center;}";
     styleString += "#whats-element-tip-delete:hover{background:#fffbf0}";
     styleString += "#whats-element-unique-container{display:flex;justify-content: space-around;}";
@@ -248,14 +248,8 @@
     styleString += "#whats-element-copy{background:aliceblue;text-align: center;border-radius: 5px;cursor: pointer;}";
     styleString += "#whats-element-copy::after{position: absolute;z-index: 1000000;padding: 0.1em 0.75em;color: #fff;text-align: center;text-shadow: none;text-transform: none;content:attr(query-type);background: #a88462;border-radius: 3px;opacity: 0;transition:all .5s}";
     styleString += "#whats-element-copy:hover:after{display:inline-block;opacity: 1;}";
-    styleString += ".byId{color:#f20c00}";
-    styleString += ".byName{color:#4b5cc4}";
-    styleString += ".byValue{color:#75664d}";
-    styleString += ".byClass{color:#808080}";
-    styleString += ".byMixed{color:#a78e44}";
-    styleString += ".byOrder{color:#eedeb0}";
-    styleString += ".byParent{color:#edd1d8}";
     styleString += "#whats-element-inner-text{color:#ddd;max-width:200px;max-height:100px;overflow:hidden;text-overflow:ellipsis;}";
-    style.innerText = styleString;
-    document.head.appendChild(style);
-})(window);
+    styleString += ".whats-element-active{outline: red 1px dashed !important}";
+    style.innerText = styleString
+    doc.head.appendChild(style)
+})(window)
