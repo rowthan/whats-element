@@ -12,7 +12,7 @@
   <header class="site__header island">
     <div class="wrap">
       <span id="animationSandbox" style="display: block;"><h1 class="site__title mega">whats-element.js</h1></span>
-      <span class="beta subhead">为每一个 HTML 元素计算唯一标识符(仅 4.8kb)</span>
+      <span class="beta subhead">为每一个 HTML 元素计算唯一标识符(仅 3.9kb)</span>
     </div>
     <p class="meta"><a href="https://github.com/rowthan/whats-element/releases/download/v0.0.9/whatsElement.min.js">Download</a> or
       <a href="//github.com/rowthan/whats-element">View on GitHub</a>
@@ -118,9 +118,15 @@
 <script src="highlight.pack.js"></script>
 <script>
   var whats = new whatsElement();
-  document.addEventListener('click',function (event) {
+  /*document.addEventListener('click',function (event) {
       whats.getUniqueId();//event.target
-  })
+  })*/
+  $(".demo span").click(function(event){
+    console.log(whats.getUniqueId(event.currentTarget));
+  });
+  $(".demo input").click(function(event){
+    console.log(whats.getUniqueId(event.currentTarget));
+  });
 
 
   $(document).ready(function() {
