@@ -224,6 +224,15 @@
       return el;
     }
 
+    if (typeof window !== "undefined" && window !== null) {
+      window.whatsElement = whatsElement;
+    }
+    if (typeof window === "undefined" || window === null) {
+      this.whatsElement = whatsElement;
+    }
+    if (typeof module !== 'undefined' && module.exports) module.exports = whatsElement;
+    if (typeof define === 'function') define(function() { return whatsElement; });
+
     var style = createElement("style"),
     styleString = "#"+containerID+"{position:absolute;color:#8ed3fb;font-size:14px;z-index:1000;background-color:rgba(255, 255, 255,0.9);box-sizing:border-box;box-shadow:rgba(0, 0, 0, 0.2) 0px 1px 10px 3px;padding: 10px 20px;border-radius: 36px;}"
     styleString += "#"+deleteID+"{cursor:pointer;position:absolute;top:-10px;width:20px;height: 20px;left:calc(50% - 8px);clip-path: polygon(50% 0,100% 50%,50% 100%,0 50%);background:#fff;}";
