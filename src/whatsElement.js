@@ -16,7 +16,7 @@
         this.lastClick = document.body
         var that = this
         /**点击其他地方时，清除*/
-        document.addEventListener('click', function(event){
+        document.addEventListener('mousedown', function(event){
             that.lastClick = event.target
             if(that.focusedElement!==that.lastClick){
               prototype.clean()
@@ -165,7 +165,7 @@
         }
         var tip = document.getElementById(containerID) ? document.getElementById(containerID) :createElement("aside",containerID);
         tip.innerHTML = ""
-        tip.addEventListener("click",function (e) {
+        tip.addEventListener("mousedown",function (e) {
             e.stopPropagation();
         })
 
@@ -235,7 +235,7 @@
 
     var style = createElement("style"),
     styleString = "#"+containerID+"{position:absolute;color:#8ed3fb;font-size:14px;z-index:1000;background-color:rgba(255, 255, 255,0.9);box-sizing:border-box;box-shadow:rgba(0, 0, 0, 0.2) 0px 1px 10px 3px;padding: 10px 20px;border-radius: 36px;}"
-    styleString += "#"+deleteID+"{cursor:pointer;position:absolute;top:-10px;width:20px;height: 20px;left:calc(50% - 8px);clip-path: polygon(50% 0,100% 50%,50% 100%,0 50%);background:#fff;}";
+    styleString += "#"+deleteID+"{cursor:pointer;position:absolute;top:-10px;width:20px;height: 20px;left:calc(50% - 8px);text-align:center;clip-path: polygon(50% 0,100% 50%,50% 100%,0 50%);background:#fff;}";
     styleString += "#"+deleteID+":hover{background:#fffbf0}";
     styleString += "#"+uniqueContainer+"{display:flex;justify-content:space-around;}";
     styleString += "#"+uniqueID+"{border:1px solid #d1d5da;box-shadow:inset 0 1px 2px rgba(27,31,35,0.075);text-indent:10px;}";
