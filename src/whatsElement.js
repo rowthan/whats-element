@@ -171,8 +171,9 @@
 
         var deleteButton = createElement("div",deleteID)
         deleteButton.innerText = 'x'
-        deleteButton.onclick = function () {
-          whatsElement.prototype.clean();
+        deleteButton.onclick = function (e) {
+          e.stopPropagation()
+          whatsElement.prototype.clean()
         }
         tip.appendChild(deleteButton);
 
