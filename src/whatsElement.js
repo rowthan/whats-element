@@ -116,10 +116,16 @@
         }
         //location by parent
         if(!result.wid){
+            if(!element.parentNode){
+                return
+            }
             var parentQueryResult = whatsElement.prototype.getUniqueId(element.parentNode,true),
-              parentQueryString = parentQueryResult.wid;
+              parentQueryString = parentQueryResult?parentQueryResult.wid:"";
             if(!parentQueryString){
-                return;
+                return{
+                    wid:"",
+                    type:"NO_LOCATION"
+                };
             }
             var targetQuery = tag;
             if(className){
