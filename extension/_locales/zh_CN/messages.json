@@ -1,0 +1,11 @@
+{
+  "extensionName": {
+    "message": "whats-element"
+  },
+  "extensionDescription": {
+    "message": "whats-element."
+  },
+  "browserActionTitle": {
+    "message": "click and compute."
+  }
+}
