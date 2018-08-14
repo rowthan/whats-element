@@ -11,7 +11,9 @@
     uniqueID = PREFIX+'-unique-id',
     whatsElement = function (argument) {
         this.options = Object.assign({},{
-            draw:true
+            draw:true,
+            /**尽可能短的wid*/
+            simpleId:true
         },argument)
         this.lastClick = document.body
         var that = this
@@ -25,6 +27,7 @@
     },
     prototype = whatsElement.prototype
     prototype.getUniqueId = function (element,parent) {
+        var that = this;
         element = element ? element : this.lastClick;
         if(!(element instanceof HTMLElement)){
             console.error("invalid input,not a HTML element");
@@ -51,10 +54,11 @@
         //location by id
         if(id && document.getElementById(id) === element){
             var regExp= new RegExp("^[a-zA-Z]+") ;
-            if(!parent){
+            /**当不为parent定位，且设置为简单结果时，直接返回id 否则使用完整路径标识符。注：两个if顺序不能更换，递归调用时 simpleId为undefined*/
+            if(!parent && this.options.simpleId){
                 result.wid = id;
             }
-            /*如果是最为父节点进行定位，需要加上 # 用于 querySelector() 查询，且符合 querySelector() 参数要求，以字母开头*/
+            /*如果为parent定位，或者设置为完整结果时候，返回tag#id*/
             else if(regExp.test(id)){
                 result.wid = tag+"#"+id
             }
@@ -69,6 +73,23 @@
         if(!result.wid && className && document.querySelector(tag+className)===element){
             result.wid = tag+className;
             result.type = "byClass"
+            var classLength = classList.length
+            if(classLength>2){
+              var n = 1;
+              /**使用class查询的个数，如2，4，8：使用2，4，8个className做查询*/
+              var queryCount = []
+              while (Math.pow(2,n)<classLength){
+                  queryCount.push(Math.pow(2,n));
+                  n++;
+              }
+              queryCount.push(classLength)
+
+              for(var k=0; k<queryCount.length;k++){
+                  /**使用class个数去查询*/
+                  var countNum = queryCount[k];
+                    //TODO 性能优化
+              }
+            }
         }
         //for radio
         if(type === "radio"){
@@ -233,6 +254,7 @@
 
     if (typeof window !== "undefined" && window !== null) {
       window.whatsElement = whatsElement;
+      window.whats = new whatsElement();
     }
     if (typeof window === "undefined" || window === null) {
       this.whatsElement = whatsElement;
@@ -252,6 +274,4 @@
     styleString += ".whats-element-active{outline:red 1px dashed !important}";
     style.innerText = styleString
     document.head.appendChild(style)
-
-    window.whatsElement = whatsElement
 })(window)

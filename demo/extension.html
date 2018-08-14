@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=no" />
+  <meta name="description" content="使用whats-element，为每一个 HTML 元素计算一个可唯一标识的定位符。"/>
+  <title>whats-element Extension</title>
+  <link rel="stylesheet" href="demo.css">
+  <link rel="stylesheet" href="highlight.css">
+</head>
+<body>
+  <header class="site__header island">
+    <div class="wrap">
+      <span id="animationSandbox" style="display: block;"><h1 class="site__title mega">whats-element Chrome Extension</h1></span>
+      <span class="beta subhead">chrome 扩展应用：获取网页元素信息</span>
+    </div>
+    <p class="meta">
+      <a href="https://github.com/rowthan/whats-element/releases/download/v1.0.4/whatsElement.zip">Download</a>
+      &nbsp;&nbsp;
+      <a href="index.html">JavaScript library</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="//github.com/rowthan/whats-element">View on GitHub</a>
+    </p>
+  </header>
+  <main class="site__content island" >
+    使用方法：
+    <ul style="text-align: left">
+      <li>点击上方 Download 下载 chrome 扩展应用</li>
+      <li>chrome 地址栏输入： chrome://extensions/</li>
+      <li>开启“开发者模式”。将下载的 whatsElement.zip 直接拖入浏览器中，完成安装。</li>
+      <li>点击任意网页元素，右击选择“whats element”;或点击右上角whats-element logo；或使用快捷键 Ctrl+Shift+E。三种方式任意一种即可唤醒whats-element</li>
+    </ul>
+  </main>
+  <script>
+      var _hmt = _hmt || [];
+      (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?b8e985c27ed0a7ec77e82525cd4a0933";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+      })();
+  </script>
+<script src="../dist/whatsElement.js"></script>
+<script>
+  /*var whats = new whatsElement();
+  document.addEventListener('click',function (event) {
+      whats.getUniqueId();//event.target
+  })*/
+</script>
+</body>
+</html>
