@@ -12,7 +12,11 @@ gulp.task('compress', function (cb) {
             gulp.src('src/**/*.js'),
             uglify(),
             gulp.dest('dist'),
-            gulp.dest('extension/scripts')
+            gulp.dest('extension/scripts'),
+            rename({
+              suffix:".min"
+            }),
+            gulp.dest('dist'),
         ],
         cb
     );
