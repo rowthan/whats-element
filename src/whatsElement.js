@@ -62,17 +62,17 @@
             else if(regExp.test(id)){
                 result.wid = tag+"#"+id
             }
-            result.type = "byId"
+            result.type = "document.getElementById()"
         }
         //location by name
         if(!result.wid && name && document.getElementsByName(name)[0] === element){
             result.wid = name;
-            result.type = "byName"
+            result.type = "document.getElementsByName()"
         }
         //location by class
         if(!result.wid && className && document.querySelector(tag+className)===element){
             result.wid = tag+className;
-            result.type = "byClass"
+            result.type = "document.querySelector()"
             var classLength = classList.length
             if(classLength>2){
               var n = 1;
@@ -99,7 +99,7 @@
             }
             if(document.querySelector(queryString)===element){
                 result.wid = queryString
-                result.type = "byValue"
+                result.type = "document.querySelector()"
             }
         }
         //location by mixed,order
@@ -109,7 +109,7 @@
             queryString = name? queryString + "[name='"+name+"']": queryString
             if(prototype.getTarget(queryString)===element){
                 result.wid = queryString
-                result.type = "byMixed"
+                result.type = "document.querySelector()"
             }
         }
         //location by order
@@ -130,7 +130,7 @@
                     queryString = queryString + ":nth-child("+index+")"
                     if(document.querySelector(queryString) === element){
                         result.wid = queryString
-                        result.type = "byOrder"
+                        result.type = "document.querySelector()"
                     }
                 }
             }
@@ -172,7 +172,7 @@
                 }
             }
             result.wid = queryString
-            result.type = "byParent"
+            result.type = "document.querySelector()"
         }
 
         this.focusedElement = prototype.getTarget(result.wid);

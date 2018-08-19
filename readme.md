@@ -38,18 +38,9 @@ import whatsElement from 'whats-element';
 ```javascript
 result = {
   uniqueId:"", // uniqueId 为最终的DOM元素在网页中的唯一标识符
-  queryType:"" // 结果为：byId,byName,byClass,byValue,byMixed,byOrder,byParent 其中一种
+  queryType:"" // 结果为：document.getElementById(),document.getElementsByName(),document.querySelector()
 }
 ```
-* queryType === 'byId'：表示通过id可以定位到该元素。使用 `document.getElementById(result.uniqueId)` 获取该对象
-* queryType === 'byName'：表示可以通过name定位到该元素。使用 `document.getElementsByName(result.uniqueId)[0]` 获取对象
-* 其他四种情况下，可以通过 `document.querySelector(result.uniqueId)` 获取对象  
-其中四种queryType分别代表：
-* byClass，可以通过 class 来定位该元素。如 `.username`
-* byValue，针对 radio 标签可以通过 value 定位，如 `input[value='male'][name='gender'']`
-* byMixed，只通过 id,class中的一种无法定位到该元素，需要联合使用 id,class 来定位。如 `input#user.username`
-* byOrder，通过序列号可以定位到元素，如 `div.title:nth-child(2)`
-* byParent，指不能元素自身所具备的特征值定位到本身，需要借助于父节点才能定位。如 `article>.title`
 
 
 ## API
