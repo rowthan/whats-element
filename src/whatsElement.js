@@ -27,7 +27,6 @@
     },
     prototype = whatsElement.prototype
     prototype.getUniqueId = function (element,parent) {
-        var that = this;
         element = element ? element : this.lastClick;
         if(!(element instanceof HTMLElement)){
             console.error("invalid input,not a HTML element");
@@ -225,8 +224,8 @@
 
         var
         top = target.getBoundingClientRect().top + target.offsetHeight,
-        tempLeft = target.getBoundingClientRect().left+window.screenX,
-        toLeft = tempLeft<100?tempLeft:tempLeft-(tip.offsetWidth|240)/2+target.offsetWidth/2-document.body.getBoundingClientRect().left;
+        tempLeft = target.getBoundingClientRect().left,
+        toLeft = tempLeft<100?tempLeft:tempLeft+target.offsetWidth/2-(tip.offsetWidth|240)/2-document.body.getBoundingClientRect().left;
         tip.style.left = toLeft+"px";
         tip.style.top = top+window.scrollY+10+"px";
         document.body.appendChild(tip);
