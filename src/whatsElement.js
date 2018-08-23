@@ -34,7 +34,12 @@
         }
         var result = {
             wid:"",
-            type:""
+            type:"",
+            top:getCoords(element).top,
+            left:getCoords(element).left,
+            viewLeft:element.getBoundingClientRect().left,
+            viewTop: element.getBoundingClientRect().top,
+            text: element.innerText
         },
         //construct data info of the element
           id = element.id,
@@ -240,6 +245,18 @@
         }
     };
 
+    function getCoords(elem) { // crossbrowser version
+        var box = elem.getBoundingClientRect();
+        var body = document.body;
+        var docEl = document.documentElement;
+        var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+        var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+        var clientTop = docEl.clientTop || body.clientTop || 0;
+        var clientLeft = docEl.clientLeft || body.clientLeft || 0;
+        var top  = box.top +  scrollTop - clientTop;
+        var left = box.left + scrollLeft - clientLeft;
+        return { top: Math.round(top), left: Math.round(left) };
+    }
     function revertStyle(){
       document.querySelectorAll("."+PREFIX+"-active").forEach(function(element){
         element.classList.remove(PREFIX+'-active');
@@ -253,7 +270,6 @@
 
     if (typeof window !== "undefined" && window !== null) {
       window.whatsElement = whatsElement;
-      window.whats = new whatsElement();
     }
     if (typeof window === "undefined" || window === null) {
       this.whatsElement = whatsElement;
