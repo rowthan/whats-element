@@ -4,7 +4,7 @@
   "description": "a tool can compute a unique string identity id to location everyone element in web page.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "echo \"Error: no test specified\" && "
   },
   "keywords": [
     "identifier",
@@ -18,7 +18,11 @@
     "url": "https://github.com/rowthan/whats-element.git"
   },
   "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "browserify": "^16.2.3",
     "gulp": "^3.9.1",
+    "gulp-babel": "^8.0.0",
     "gulp-rename": "^1.4.0",
     "gulp-uglify": "^3.0.0",
     "gulp-watch": "^4.3.11",
