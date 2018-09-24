@@ -1,6 +1,7 @@
 /**
- * Created by rowthan on 2017/12/9.
+ * Created by rowthan on 2017/12/9. TODO show size
  */
+import {createElement,getCoords} from "./helper";
 (function(window,undefined){
     var document = window.document,
     PREFIX = 'whats-element',
@@ -245,29 +246,11 @@
         }
     };
 
-    function getCoords(elem) { // crossbrowser version
-        var box = elem.getBoundingClientRect();
-        var body = document.body;
-        var docEl = document.documentElement;
-        var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
-        var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
-        var clientTop = docEl.clientTop || body.clientTop || 0;
-        var clientLeft = docEl.clientLeft || body.clientLeft || 0;
-        var top  = box.top +  scrollTop - clientTop;
-        var left = box.left + scrollLeft - clientLeft;
-        return { top: Math.round(top), left: Math.round(left) };
-    }
     function revertStyle(){
       document.querySelectorAll("."+PREFIX+"-active").forEach(function(element){
         element.classList.remove(PREFIX+'-active');
       })
     }
-    function createElement(type,id) {
-      var el = document.createElement(type?type:"div");
-      id?el.id = id:"";
-      return el;
-    }
-
     if (typeof window !== "undefined" && window !== null) {
       window.whatsElement = whatsElement;
     }
