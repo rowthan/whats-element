@@ -3,15 +3,14 @@
  * 包含核心 api 获取id,获取元素，不含UI
  */
 import {getCoords,initFunction} from "./helper";
-var document = window.document,noop = function(){console.log("no ui")},
-
+var document = window.document,noop = function(){},
 whatsElementPure = initFunction(),
 prototype = whatsElementPure.prototype
 prototype.getUniqueId = function (element,parent) {
     element = element ? element : this.lastClick;
     if(!(element instanceof HTMLElement)){
-        console.error("invalid input,not a HTML element");
-        return null;
+        console.error("input is not a HTML element");
+        return {};
     }
     var result = {
         wid:"",
@@ -60,9 +59,9 @@ prototype.getUniqueId = function (element,parent) {
         result.type = "document.querySelector()"
         var classLength = classList.length
         if(classLength>2){
-          var n = 1;
+          var n = 1,
           /**使用class查询的个数，如2，4，8：使用2，4，8个className做查询*/
-          var queryCount = []
+          queryCount = []
           while (Math.pow(2,n)<classLength){
               queryCount.push(Math.pow(2,n));
               n++;
@@ -89,7 +88,7 @@ prototype.getUniqueId = function (element,parent) {
     }
     //location by mixed,order
     if(!result.wid){
-        var queryString = tag;
+        queryString = tag;
         queryString = className ? queryString +className: queryString
         queryString = name? queryString + "[name='"+name+"']": queryString
         if(prototype.getTarget(queryString)===element){
@@ -99,7 +98,7 @@ prototype.getUniqueId = function (element,parent) {
     }
     //location by order
     if(!result.wid){
-        var queryString = tag
+        queryString = tag
         queryString = className ? queryString +className: queryString
 
         var elements = document.querySelectorAll(queryString)
@@ -137,8 +136,8 @@ prototype.getUniqueId = function (element,parent) {
         if(className){
             targetQuery += className;
         }
-        var queryString = parentQueryString+">"+targetQuery,
-          queryElements = document.querySelectorAll(queryString);
+          queryString = parentQueryString+">"+targetQuery
+          var queryElements = document.querySelectorAll(queryString);
         if(queryElements.length>1){
             queryString = null;
             var index = null;
@@ -162,7 +161,6 @@ prototype.getUniqueId = function (element,parent) {
 
     this.focusedElement = prototype.getTarget(result.wid);
     if(!parent && this.options.draw ){
-        console.log("draw")
         this.__proto__.draw(result);
     }
     return result

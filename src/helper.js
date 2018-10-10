@@ -1,9 +1,3 @@
-function createElement(type,id) {
-    var el = document.createElement(type?type:"div");
-    id?el.id = id:"";
-    return el;
-}
-
 function getCoords(elem) {
     var box = elem.getBoundingClientRect();
     var body = document.body;
@@ -38,7 +32,6 @@ function initFunction(){
 }
 
 export {
-    createElement,
     getCoords,
     initFunction
 }

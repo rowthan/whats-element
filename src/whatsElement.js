@@ -1,5 +1,5 @@
 /*使用 UI，导出js使用 具备完善功能  */
-import {createElement,initFunction} from "./helper";
+import {initFunction} from "./helper";
 import whatsElementPure from './whatsElementPure.js'
 var PREFIX = 'whats-element',
     containerID = PREFIX+'-tip-container',
@@ -69,6 +69,11 @@ prototype.clean = function () {
         container.outerHTML='';
     }
 };
+function createElement(type,id) {
+    var el = document.createElement(type?type:"div");
+    id?el.id = id:"";
+    return el;
+}
 function revertStyle(){
     document.querySelectorAll("."+PREFIX+"-active").forEach(function(element){
         element.classList.remove(PREFIX+'-active');
