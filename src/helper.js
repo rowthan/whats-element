@@ -17,7 +17,28 @@ function getCoords(elem) {
     return { top: Math.round(top), left: Math.round(left) };
 }
 
+function initFunction(){
+    var init =  function (argument) {
+        this.options = Object.assign({},{
+            draw:true,
+            /**尽可能短的wid*/
+            simpleId:true
+        },argument)
+        this.lastClick = document.body
+        var that = this
+        /**点击其他地方时，清除*/
+        document.addEventListener('mousedown', function(event){
+            that.lastClick = event.target
+            if(that.focusedElement!==that.lastClick){
+              init.prototype.clean()
+            }
+        })
+    }
+    return init;
+}
+
 export {
     createElement,
-    getCoords
+    getCoords,
+    initFunction
 }
