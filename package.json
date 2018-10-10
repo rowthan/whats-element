@@ -1,6 +1,6 @@
 {
   "name": "whats-element",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "a tool can compute a unique string identity id to location everyone element in web page.",
   "main": "index.js",
   "scripts": {

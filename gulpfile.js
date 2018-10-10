@@ -12,7 +12,7 @@ const packageJson = JSON.parse(fs.readFileSync('./package.json'));
 var es = require('event-stream');
 const version = packageJson.version;
 gulp.task('compress', function (cb) {
-    const entires = ["src/whatsElement.js","src/whatsElementWithUI.js"]
+    const entires = ["src/whatsElement.js","src/whatsElementPure.js"]
 
     // var b = browserify({
     //     entries:["src/whatsElement.js","src/whatsElementWithUI.js"]
@@ -24,7 +24,6 @@ gulp.task('compress', function (cb) {
             .bundle()
             .pipe(source(entry.replace("src/","")))
             .pipe(buffer())
-
             .pipe(uglify())
             .pipe(rename({
                 suffix:".min"
