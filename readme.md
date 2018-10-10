@@ -10,8 +10,7 @@ demo.html
 
  var whats = new whatsElement();
   document.addEventListener('mousedown', (event) => {
-     const target = event.target;
-     const result = whats.getUniqueId(target);//当 getUniqueId()参数为空时候，默认计算鼠标点击到的最后一个HTML元素。
+      const result = whats.getUniqueId(event.target)//当 getUniqueId()参数为空时候，默认计算鼠标点击到的最后一个HTML元素。
   })
 ```
 
@@ -25,15 +24,11 @@ demo.js
 import whatsElement from 'whats-element';
  var whats = new whatsElement();
   document.addEventListener('mousedown', (event) => {
-     const target = event.target;
-     const result = whats.getUniqueId(target);
+      const result = whats.getUniqueId(event.target)
   })
 ```
 
 ## 运算结果
-```javascript
- result = whatsElement.getUniqueId(target);
-```
 返回结果 
 ```javascript
 result = {
@@ -47,5 +42,11 @@ result = {
 whatsElement 提供以下方法
 * *`whatsElement.getTarget(queryString)`*  根据一个标识符获取一个HTML元素对象
 * *`whatsElement.getUniqueId(HTMLElement)`*  输入一个HTML对象，计算出它的唯一标识符、定位方式
-* *`whatsElement.draw(result)`*  根据 `whatsElement.getUniqueId(HTMLElement)`的结果在页面中渲染出结果信息。
-* *`whatsElement.clean()`*  删除 `whatsElement.draw()` 在网页中绘制的提示框。
+* *`whatsElement.draw(result)`*  根据 `whatsElement.getUniqueId(HTMLElement)`的结果在页面中渲染出结果信息。pure 版本不提供
+* *`whatsElement.clean()`*  删除 `whatsElement.draw()` 在网页中绘制的提示框。 pure 版本不提供
+
+## 更多
+为了将代码极致压缩，提供pure版本whatsElement，该版本不包含UI，不到4kb
+使用方法：
+
+`import whatsElement from 'whats-element/pure'`

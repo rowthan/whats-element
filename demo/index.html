@@ -84,12 +84,7 @@
     </div>
     <p class="tip">
       HTML 中的元素可能具备 id,class,name,value,type 等，甚至不具备任何属性。或许多个 HTML 元素具备相同的属性，不具备唯一标识的条件。
-      无论是何种情况 whatsElement.js 都能够正确的运算出该 HTML 元素在该页面中的唯一标识符，计算出的结果，可通过一下三个原生API 获取到该元素。
-      <ul style="text-align: left">
-        <li>document.getElementById()</li>
-        <li>document.getElementsByName()[0]</li>
-        <li>document.querySelector()</li>
-      </ul>
+      无论是何种情况 whatsElement.js 都能够正确的运算出该 HTML 元素在该页面中的唯一标识符id，并通过API <b>whatsElement.getTarget(id)</b> 获取到该 HTML 元素。
     </p>
     <div class="example">
       <h4>使用</h4>
