@@ -9,27 +9,30 @@ var rename  = require('gulp-rename');
 var fs = require('fs');
 var browserify = require('browserify');
 const packageJson = JSON.parse(fs.readFileSync('./package.json'));
+var es = require('event-stream');
 const version = packageJson.version;
 gulp.task('compress', function (cb) {
-    var b = browserify({
-        entries:"src/whatsElement.js"
-    })
+    const entires = ["src/whatsElement.js","src/whatsElementWithUI.js"]
 
-    return b
+    // var b = browserify({
+    //     entries:["src/whatsElement.js","src/whatsElementWithUI.js"]
+    // })
+
+    var tasks = entires.map(function(entry){
+        return browserify({ entries: entry})
             .transform(babelify)
             .bundle()
-            .pipe(source("whatsElement.js"))
+            .pipe(source(entry.replace("src/","")))
             .pipe(buffer())
-            .pipe(gulp.dest('dist'))
+
             .pipe(uglify())
             .pipe(rename({
                 suffix:".min"
             }))
             .pipe(gulp.dest('dist'))
             .pipe(gulp.dest('extension/scripts'))
-
-
-
+    })
+    es.merge(tasks).on("end",cb);
     // pump([
     //         gulp.src('src/**/whatsElement.js'),
     //         babel(),
