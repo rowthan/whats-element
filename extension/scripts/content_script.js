@@ -15,6 +15,5 @@ function getMousePos(event) {
     var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
     var x = e.pageX || e.clientX + scrollX;
     var y = e.pageY || e.clientY + scrollY;
-    console.log('x: ' + x + '\ny: ' + y);
     return { 'x': x, 'y': y };
 }
