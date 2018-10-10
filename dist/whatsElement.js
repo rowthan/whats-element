@@ -333,7 +333,7 @@ var _helper = require("./helper");
   }
 
   if (typeof window === "undefined" || window === null) {
-    this.whatsElement = whatsElement;
+    this.whatsElementPure = whatsElement;
   }
 
   if (typeof module !== 'undefined' && module.exports) module.exports = whatsElement;
