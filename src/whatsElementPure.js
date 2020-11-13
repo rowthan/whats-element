@@ -10,17 +10,12 @@ prototype = whatsElementPure.prototype
 prototype.getUniqueId = function (element,parent) {
     element = element ? element : this.lastClick;
     if(!(element instanceof HTMLElement)){
-        console.error("input is not a HTML element");
+        console.error("input is not a HTML element",element);
         return {};
     }
     var result = {
         wid:"",
         type:"",
-        top:getCoords(element).top,
-        left:getCoords(element).left,
-        viewLeft:element.getBoundingClientRect().left,
-        viewTop: element.getBoundingClientRect().top,
-        text: element.innerText
     },
     //construct data info of the element
       id = element.id,
@@ -190,6 +185,25 @@ prototype.getTarget = function (queryString,type='') {
     }catch (e) {
         console.error(e);
     }
+    return result;
+};
+
+prototype.compute = function(element){
+    element = element ? element : this.lastClick;
+    var uinque = this.getUniqueId(element);
+    var viewPosition = element.getBoundingClientRect();
+    var inView = viewPosition.left>0 && viewPosition.left < window.innerWidth && viewPosition.top>0 && viewPosition.top<window.innerHeight;
+
+    var result = {
+        wid: uinque.wid,
+        type: uinque.type,
+        top:getCoords(element).top,
+        left:getCoords(element).left,
+        viewLeft:viewPosition.left,
+        viewTop: viewPosition.top,
+        text: element.innerText,
+        visible: inView,
+    };
     return result;
 };
 

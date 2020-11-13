@@ -24,7 +24,7 @@ chrome.commands.onCommand.addListener((command) => {
 
 function executeWhats(){
   chrome.tabs.executeScript({
-    code: 'window.whats.getUniqueId();',
+    code: 'console.log(window.whats.compute())',
     allFrames: true,
   })
 }
