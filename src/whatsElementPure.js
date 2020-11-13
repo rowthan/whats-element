@@ -1,11 +1,12 @@
 /**
- * Created by rowthan on 2017/12/9. TODO show size
+ * Created by rowthan on 2017/12/9.
  * 包含核心 api 获取id,获取元素，不含UI
  */
-import {getCoords,initFunction} from "./helper";
+import {getCoords,initFunction,simpleFyId} from "./helper";
 var document = window.document,noop = function(){},
 whatsElementPure = initFunction(),
 prototype = whatsElementPure.prototype
+
 prototype.getUniqueId = function (element,parent) {
     element = element ? element : this.lastClick;
     if(!(element instanceof HTMLElement)){
@@ -29,13 +30,15 @@ prototype.getUniqueId = function (element,parent) {
       className = "",
       classList = element.classList || [];
       classList.forEach(function (item) {
-        className += "."+item;
-      })
+        if(/^[a-zA-Z]/.test(item)){ // 过滤非法 class 名称
+            className += "."+item;
+        }
+      });
     if(tag==="body" || tag=== "html"){
         result.wid = tag;
         result.type= tag;
     }
-    //location by id
+    //locate by id
     if(id && document.getElementById(id) === element){
         var regExp= new RegExp("^[a-zA-Z]+") ;
         /**当不为parent定位，且设置为简单结果时，直接返回id 否则使用完整路径标识符。注：两个if顺序不能更换，递归调用时 simpleId为undefined*/
@@ -48,35 +51,18 @@ prototype.getUniqueId = function (element,parent) {
         }
         result.type = "document.getElementById()"
     }
-    //location by name
+    //locate by name
     if(!result.wid && name && document.getElementsByName(name)[0] === element){
         result.wid = name;
         result.type = "document.getElementsByName()"
     }
-    //location by class
+    //locate by class
     if(!result.wid && className && document.querySelector(tag+className)===element){
         result.wid = tag+className;
         result.type = "document.querySelector()"
-        var classLength = classList.length
-        if(classLength>2){
-          var n = 1,
-          /**使用class查询的个数，如2，4，8：使用2，4，8个className做查询*/
-          queryCount = []
-          while (Math.pow(2,n)<classLength){
-              queryCount.push(Math.pow(2,n));
-              n++;
-          }
-          queryCount.push(classLength)
-
-          for(var k=0; k<queryCount.length;k++){
-              /**使用class个数去查询*/
-              var countNum = queryCount[k];
-                //TODO 性能优化
-          }
-        }
     }
     //for radio
-    if(type === "radio"){
+    if(!result.wid && type === "radio"){
         var value = element.value,queryString = tag+"[value='"+value+"']"
         if(name){
             queryString += "[name='"+name+"']"
@@ -86,17 +72,28 @@ prototype.getUniqueId = function (element,parent) {
             result.type = "document.querySelector()"
         }
     }
-    //location by mixed,order
+    if(!result.wid && tag === 'a'){
+        var href = element.attributes.href.value;
+        if(href){
+            queryString = `a[href="${href}"]`;
+            var selectedEl = document.querySelector(queryString);
+            if(selectedEl===element){
+                result.wid = queryString
+                result.type = "document.querySelector()"
+            }
+        }
+    }
+    //locate by tag,class,name
     if(!result.wid){
         queryString = tag;
         queryString = className ? queryString +className: queryString
         queryString = name? queryString + "[name='"+name+"']": queryString
-        if(prototype.getTarget(queryString)===element){
+        if(document.querySelector(queryString)===element){
             result.wid = queryString
             result.type = "document.querySelector()"
         }
     }
-    //location by order
+    //locate by order
     if(!result.wid){
         queryString = tag
         queryString = className ? queryString +className: queryString
@@ -119,19 +116,24 @@ prototype.getUniqueId = function (element,parent) {
             }
         }
     }
+    if(result.wid){ // 通过本身已经定位到自己时，尝试简化ID长度
+        result.wid = simpleFyId(result.wid);
+    }
     //location by parent
-    if(!result.wid){
+    else {
         if(!element.parentNode){
             return
         }
-        var parentQueryResult = whatsElementPure.prototype.getUniqueId(element.parentNode,true),
-          parentQueryString = parentQueryResult?parentQueryResult.wid:"";
+        var parentQueryResult = whatsElementPure.prototype.getUniqueId(element.parentNode,true);
+        var parentQueryString = parentQueryResult?parentQueryResult.wid:"";
+        parentQueryString = simpleFyId(parentQueryString);
         if(!parentQueryString){
             return{
-                wid:"",
+                wid: null,
                 type:"NO_LOCATION"
             };
         }
+        // 通过 name.class 来寻找子节点
         var targetQuery = tag;
         if(className){
             targetQuery += className;
@@ -150,7 +152,7 @@ prototype.getUniqueId = function (element,parent) {
             if(index>=1){
                 queryString = parentQueryString+">"+ targetQuery + ":nth-child("+index+")";
                 var queryTarget = document.querySelector(queryString);
-                if(queryTarget!=element){
+                if(queryTarget!==element){
                     queryString = null;
                 }
             }
@@ -163,11 +165,33 @@ prototype.getUniqueId = function (element,parent) {
     if(!parent && this.options.draw ){
         this.__proto__.draw(result);
     }
+    if(result.wid.length>'10'){
+        result.warn = true;
+    }
     return result
-}
-prototype.getTarget = function (queryString) {
-    return document.getElementById(queryString) || document.getElementsByName(queryString)[0] || document.querySelector(queryString);
-}
+};
+
+prototype.getTarget = function (queryString,type='') {
+    var result = null;
+    try{
+        switch (type) {
+            case 'document.getElementById()':
+                result = document.getElementById(queryString);
+                break;
+            case 'document.getElementsByName()':
+                result = document.getElementsByName(queryString)[0];
+                break;
+            case 'document.querySelector()':
+                result = document.querySelector(queryString);
+                break;
+            default:
+                result = document.getElementById(queryString) || document.getElementsByName(queryString)[0] || document.querySelector(queryString);
+        }
+    }catch (e) {
+        console.error(e);
+    }
+    return result;
+};
 
 prototype.clean = noop
 prototype.draw = noop
