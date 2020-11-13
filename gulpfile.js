@@ -1,29 +1,32 @@
-var gulp = require('gulp');
-var babelify = require('babelify')
-var source = require('vinyl-source-stream');
-var buffer = require('vinyl-buffer');
-var uglify = require('gulp-uglify');
-var pump = require('pump');
-var gulpZip = require('gulp-zip');
-var rename  = require('gulp-rename');
-var fs = require('fs');
-var browserify = require('browserify');
+const gulp = require('gulp');
+const { task,series } = require('gulp');
+const babelify = require('babelify')
+const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
+const uglify = require('gulp-uglify');
+const pump = require('pump');
+const gulpZip = require('gulp-zip');
+const rename  = require('gulp-rename');
+const fs = require('fs');
+const browserify = require('browserify');
 const packageJson = JSON.parse(fs.readFileSync('./package.json'));
-var es = require('event-stream');
+const es = require('event-stream');
 const version = packageJson.version;
-gulp.task('compress', function (cb) {
+
+const compress = function (cb) {
     const entires = ["src/whatsElement.js","src/whatsElementPure.js"]
 
-    // var b = browserify({
+    // const b = browserify({
     //     entries:["src/whatsElement.js","src/whatsElementWithUI.js"]
     // })
 
-    var tasks = entires.map(function(entry){
+    const tasks = entires.map(function(entry){
         return browserify({ entries: entry})
             .transform(babelify)
             .bundle()
             .pipe(source(entry.replace("src/","")))
             .pipe(buffer())
+            .pipe(gulp.dest('extension/scripts'))
             .pipe(uglify())
             .pipe(rename({
                 suffix:".min"
@@ -45,14 +48,19 @@ gulp.task('compress', function (cb) {
     //     ],
     //     cb
     // );
+}
+
+task('compress', compress);
+
+task('watch', function () {
+   gulp.watch('src/**/*.js',compress)
 });
 
-gulp.task('watch', function () {
-   gulp.watch('src/**/*.js',['compress'])
-});
+const copy = function () {
+    return gulp.src('extension/**')
+        .pipe(gulpZip(`whatsElement-${version}.zip`))
+        .pipe(gulp.dest('dist'));
+};
+task('copy',);
 
-gulp.task('release', ['compress'], () => {
-  return gulp.src('extension/**')
-    .pipe(gulpZip(`whatsElement-${version}.zip`))
-    .pipe(gulp.dest('dist'));
-});
+task('release', series(compress,copy));

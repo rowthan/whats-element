@@ -1,10 +1,10 @@
 {
   "name": "whats-element",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "a tool can compute a unique string identity id to location everyone element in web page.",
   "main": "index.js",
   "scripts": {
-    "build": "echo \"Error: no test specified\" && "
+    "build": "gulp release"
   },
   "keywords": [
     "identifier",
@@ -20,13 +20,17 @@
   "devDependencies": {
     "@babel/core": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
+    "babelify": "^10.0.0",
     "browserify": "^16.2.3",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-rename": "^1.4.0",
     "gulp-uglify": "^3.0.0",
     "gulp-watch": "^4.3.11",
     "gulp-zip": "^4.2.0",
-    "pump": "^2.0.0"
+    "pump": "^2.0.0",
+    "vinyl-buffer": "^1.0.1",
+    "event-stream": "^4.0.1",
+    "vinyl-source-stream": "^2.0.0"
   }
 }
