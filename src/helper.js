@@ -31,7 +31,29 @@ function initFunction(){
     return init;
 }
 
+function simpleFyId(wid) {
+    if(!wid){
+        return wid;
+    }
+    var result = wid;
+    // todo 递归二分法 衰减
+    try{
+        var classList = wid.split('.');
+        var newQuery = classList.slice(0,Math.fround(classList.length/2)).join('.');
+        if(!newQuery){
+            return wid;
+        }
+        if(document.querySelector(newQuery)===document.querySelector(wid)){
+            result = newQuery;
+        }
+    }catch (e) {
+        
+    }
+    return result;
+}
+
 export {
+    simpleFyId,
     getCoords,
     initFunction
 }
