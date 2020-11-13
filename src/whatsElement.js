@@ -11,6 +11,7 @@ var whatsWithUI = initFunction(),
 prototype = whatsWithUI.prototype;
 prototype.getTarget = whatsElementPure.prototype.getTarget
 prototype.getUniqueId = whatsElementPure.prototype.getUniqueId
+prototype.compute = whatsElementPure.prototype.compute
 
 prototype.draw = function (result) {
     console.log("draw ui")
