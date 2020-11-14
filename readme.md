@@ -55,7 +55,7 @@ result = {
   viewLeft:0, // 在视口的位置 left
   viewTop: 0, // 在视口的位置 top
   text: '', // element.innerText
-  visible: false, // 是否在当前可视区域内
+  visible: false, // 是否在当前可视区域内，且能被肉眼看见（opacity不为0，visible不为false,display不为none）
 }
 ```
 

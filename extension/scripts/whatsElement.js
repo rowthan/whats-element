@@ -336,8 +336,12 @@ prototype.getUniqueId = function (element, parent) {
     result.wid = (0, _helper.simpleFyId)(result.wid);
   } //location by parent
   else {
+      // 没有父节点
       if (!element.parentNode) {
-        return;
+        return {
+          wid: null,
+          type: 'NO_LOCATION'
+        };
       }
 
       var parentQueryResult = whatsElementPure.prototype.getUniqueId(element.parentNode, true);
