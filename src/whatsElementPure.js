@@ -70,7 +70,7 @@ prototype.getUniqueId = function (element,parent) {
     if(!result.wid && tag === 'a'){
         var href = element.attributes.href.value;
         if(href){
-            queryString = `a[href="${href}"]`;
+            queryString = "a[href='"+href+"']";
             var selectedEl = document.querySelector(queryString);
             if(selectedEl===element){
                 result.wid = queryString
