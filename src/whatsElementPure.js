@@ -167,7 +167,7 @@ prototype.getUniqueId = function (element,parent) {
     return result
 };
 
-prototype.getTarget = function (queryString,type='') {
+prototype.getTarget = function (queryString,type) {
     var result = null;
     try{
         switch (type) {
