@@ -289,8 +289,7 @@ prototype.getUniqueId = function (element, parent) {
   return result;
 };
 
-prototype.getTarget = function (queryString) {
-  var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+prototype.getTarget = function (queryString, type) {
   var result = null;
 
   try {
