@@ -7,7 +7,9 @@ var document = window.document,noop = function(){},
 whatsElementPure = initFunction(),
 prototype = whatsElementPure.prototype
 
-prototype.getUniqueId = function (element,parent) {
+const SPLIT_MODE_CODE = '  '
+
+prototype.getUniqueId = function (element,isParent) {
     element = element ? element : this.lastClick;
     if(!(element instanceof HTMLElement)){
         console.error("input is not a HTML element",element);
@@ -37,7 +39,7 @@ prototype.getUniqueId = function (element,parent) {
     if(id && document.getElementById(id) === element){
         var regExp= new RegExp("^[a-zA-Z]+") ;
         /**当不为parent定位，且设置为简单结果时，直接返回id 否则使用完整路径标识符。注：两个if顺序不能更换，递归调用时 simpleId为undefined*/
-        if(!parent && this.options.simpleId){
+        if(!isParent && this.options.simpleId){
             result.wid = id;
         }
         /*如果为parent定位，或者设置为完整结果时候，返回tag#id*/
@@ -112,21 +114,20 @@ prototype.getUniqueId = function (element,parent) {
         }
     }
     if(result.wid){ // 通过本身已经定位到自己时，尝试简化ID长度
+        console.log(result.wid,'before')
         result.wid = simpleFyId(result.wid);
+        console.log(result.wid,'after')
     }
     //location by parent
     else {
-        // 没有父节点
-        if(!element.parentNode){
-            return {wid:null,type:'NO_LOCATION'}
-        }
-        var parentQueryResult = whatsElementPure.prototype.getUniqueId(element.parentNode,true);
-        var parentQueryString = parentQueryResult?parentQueryResult.wid:"";
+        const parentNode = element.parentNode;
+        var parentQueryResult = whatsElementPure.prototype.getUniqueId(parentNode,true);
+        var parentQueryString = parentQueryResult.wid;
         parentQueryString = simpleFyId(parentQueryString);
         if(!parentQueryString){
             return{
                 wid: null,
-                type:"NO_LOCATION"
+                type:"NO_LOCATION_NOT_LOCATED_PARENT_WID"
             };
         }
         // 通过 name.class 来寻找子节点
@@ -134,31 +135,38 @@ prototype.getUniqueId = function (element,parent) {
         if(className){
             targetQuery += className;
         }
-          queryString = parentQueryString+">"+targetQuery
-          var queryElements = document.querySelectorAll(queryString);
-        if(queryElements.length>1){
+        queryString = parentQueryString+SPLIT_MODE_CODE+targetQuery;
+        var queryElements = parentNode.querySelectorAll(queryString);
+
+        var firstChildNodes = [].filter.call(queryElements,(item)=>{
+            return item.parentNode === parentNode;
+        })
+
+        if(firstChildNodes.length>1){
             queryString = null;
-            var index = null;
-            for(var j=0; j<element.parentNode.children.length; j++){
-                if(element.parentNode.children[j]===element){
+            let index = -1;
+            for(let j=0; j<parentNode.children.length; j++){
+                // 只比较一级子节点
+                if(parentNode.children[j]===element){
                     index = j+1;
                     break;
                 }
             }
+
             if(index>=1){
-                queryString = parentQueryString+">"+ targetQuery + ":nth-child("+index+")";
-                var queryTarget = document.querySelector(queryString);
+                queryString = parentQueryString+SPLIT_MODE_CODE+ targetQuery + ":nth-child("+index+")";
+                var queryTarget = this.getTarget(queryString,'split');
                 if(queryTarget!==element){
-                    queryString = null;
+                    queryString = '';
                 }
             }
         }
         result.wid = queryString
-        result.type = "document.querySelector()"
+        result.type = "split"
     }
 
     this.focusedElement = prototype.getTarget(result.wid);
-    if(!parent && this.options.draw ){
+    if(!isParent && this.options.draw ){
         this.__proto__.draw(result);
     }
     if(result.wid.length>'10'){
@@ -167,21 +175,62 @@ prototype.getUniqueId = function (element,parent) {
     return result
 };
 
-prototype.getTarget = function (queryString,type) {
+
+prototype.getTarget = function (queryString,type,root) {
     var result = null;
+    queryString = queryString ? queryString.trim() : '';
     try{
+        const findRoot = root || document;
+        if(!findRoot || !queryString){
+            return
+        }
         switch (type) {
-            case 'document.getElementById()':
-                result = document.getElementById(queryString);
+            // TODO 生成ID时避免使用 id
+            case 'document.getElementById()': // 仅body有
+                result = findRoot.getElementById ? findRoot.getElementById(queryString) : null;
                 break;
-            case 'document.getElementsByName()':
-                result = document.getElementsByName(queryString)[0];
+            case 'document.getElementsByName()': // 仅body有
+                result = findRoot.getElementsByName ? findRoot.getElementsByName(queryString)[0]: null;
                 break;
             case 'document.querySelector()':
-                result = document.querySelector(queryString);
+                // getElementsByTagName
+                result = findRoot.querySelector ? findRoot.querySelector(queryString) : null;
+                break;
+            case 'split':
+                const splitedSelector = queryString.split(/\s{2}/);
+                const selectors = splitedSelector.filter((item)=>{
+                    return item ? !!item.trim() : false;
+                })
+
+                if(selectors.length>1){
+                    const currentSelector = selectors[0];
+
+                    const matchedChildNodes = findRoot.querySelectorAll(currentSelector);
+
+                    let currentTarget = matchedChildNodes[0] || this.getTarget(currentSelector);
+                    // 只查找符合要求的子元素
+                    if(root){
+                        currentTarget = [].find.call(matchedChildNodes,function (item) {
+                            return item.parentNode === root;
+                        })
+                    }
+
+                    selectors.splice(0,1);
+                    const nextString = selectors.join(SPLIT_MODE_CODE);
+
+                    result = this.getTarget(nextString,'split',currentTarget);
+                }else{
+                    // 全局查找符合要求的，root 比较
+                    const matchedElements = document.querySelectorAll(selectors[0]);
+                    result = [].find.call(matchedElements,function (item) {
+                        return item.parentNode === root;
+                    })
+                }
                 break;
             default:
-                result = document.getElementById(queryString) || document.getElementsByName(queryString)[0] || document.querySelector(queryString);
+                result = this.getTarget(queryString,'document.getElementById()')
+                    || this.getTarget(queryString,'document.getElementsByName()')
+                    || this.getTarget(queryString,'document.querySelector()')
         }
     }catch (e) {
         console.error(e);
