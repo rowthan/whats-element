@@ -300,6 +300,15 @@ prototype.getTarget = function (queryString, type, root) {
 
     if (!findRoot || !queryString) {
       return;
+    } // 没有指定 type 的情况下，判断是否需要根据父元素查找，split 模式
+
+
+    var splitedSelector = queryString.split(/\s{2}/);
+
+    if (!type) {
+      if (splitedSelector.length > 1) {
+        type = 'split';
+      }
     }
 
     switch (type) {
@@ -320,7 +329,6 @@ prototype.getTarget = function (queryString, type, root) {
         break;
 
       case 'split':
-        var splitedSelector = queryString.split(/\s{2}/);
         var selectors = splitedSelector.filter(function (item) {
           return item ? !!item.trim() : false;
         });
