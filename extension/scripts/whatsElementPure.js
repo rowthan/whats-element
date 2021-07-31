@@ -292,7 +292,7 @@ prototype.getUniqueId = function (element, isParent) {
 
 prototype.getTarget = function (queryString, type, root) {
   var result = null;
-  queryString = queryString.trim();
+  queryString = queryString ? queryString.trim() : '';
 
   try {
     var findRoot = root || document;
@@ -319,7 +319,10 @@ prototype.getTarget = function (queryString, type, root) {
         break;
 
       case 'split':
-        var selectors = queryString.split(/\s{2}/);
+        var splitedSelector = queryString.split(/\s{2}/);
+        var selectors = splitedSelector.filter(function (item) {
+          return item ? !!item.trim() : false;
+        });
 
         if (selectors.length > 1) {
           var currentSelector = selectors[0];
