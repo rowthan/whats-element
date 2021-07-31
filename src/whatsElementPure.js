@@ -184,6 +184,14 @@ prototype.getTarget = function (queryString,type,root) {
         if(!findRoot || !queryString){
             return
         }
+
+        // 没有指定 type 的情况下，判断是否需要根据父元素查找，split 模式
+        const splitedSelector = queryString.split(/\s{2}/);
+        if(!type){
+            if(splitedSelector.length>1){
+                type = 'split';
+            }
+        }
         switch (type) {
             // TODO 生成ID时避免使用 id
             case 'document.getElementById()': // 仅body有
@@ -197,7 +205,6 @@ prototype.getTarget = function (queryString,type,root) {
                 result = findRoot.querySelector ? findRoot.querySelector(queryString) : null;
                 break;
             case 'split':
-                const splitedSelector = queryString.split(/\s{2}/);
                 const selectors = splitedSelector.filter((item)=>{
                     return item ? !!item.trim() : false;
                 })
