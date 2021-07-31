@@ -406,11 +406,12 @@ prototype.getUniqueId = function (element, isParent) {
 
 prototype.getTarget = function (queryString, type, root) {
   var result = null;
+  queryString = queryString.trim();
 
   try {
     var findRoot = root || document;
 
-    if (!findRoot) {
+    if (!findRoot || !queryString) {
       return;
     }
 
