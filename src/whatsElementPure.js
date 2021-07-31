@@ -120,7 +120,8 @@ prototype.getUniqueId = function (element,isParent) {
     }
     //location by parent
     else {
-        var parentQueryResult = whatsElementPure.prototype.getUniqueId(element.parentNode,true);
+        const parentNode = element.parentNode;
+        var parentQueryResult = whatsElementPure.prototype.getUniqueId(parentNode,true);
         var parentQueryString = parentQueryResult.wid;
         parentQueryString = simpleFyId(parentQueryString);
         if(!parentQueryString){
@@ -135,18 +136,18 @@ prototype.getUniqueId = function (element,isParent) {
             targetQuery += className;
         }
         queryString = parentQueryString+SPLIT_MODE_CODE+targetQuery;
-        var queryElements = element.parentNode.querySelectorAll(queryString);
+        var queryElements = parentNode.querySelectorAll(queryString);
 
         var firstChildNodes = [].filter.call(queryElements,(item)=>{
-            return item.parentNode === element.parentNode;
+            return item.parentNode === parentNode;
         })
 
         if(firstChildNodes.length>1){
             queryString = null;
             let index = -1;
-            for(var j=0; j<firstChildNodes.length; j++){
+            for(let j=0; j<parentNode.children.length; j++){
                 // 只比较一级子节点
-                if(firstChildNodes[j]===element){
+                if(parentNode.children[j]===element){
                     index = j+1;
                     break;
                 }
