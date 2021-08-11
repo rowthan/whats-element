@@ -167,7 +167,9 @@ prototype.getUniqueId = function (element, isParent) {
   }
 
   if (!result.wid && tag === 'a') {
-    var href = element.attributes.href.value;
+    var _element$attributes$h;
+
+    var href = (_element$attributes$h = element.attributes.href) === null || _element$attributes$h === void 0 ? void 0 : _element$attributes$h.value;
 
     if (href) {
       queryString = "a[href='" + href + "']";
