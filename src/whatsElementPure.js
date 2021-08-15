@@ -114,9 +114,7 @@ prototype.getUniqueId = function (element,isParent) {
         }
     }
     if(result.wid){ // 通过本身已经定位到自己时，尝试简化ID长度
-        console.log(result.wid,'before')
         result.wid = simpleFyId(result.wid);
-        console.log(result.wid,'after')
     }
     //location by parent
     else {
