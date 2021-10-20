@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.simpleFyId = simpleFyId;
 exports.getCoords = getCoords;
 exports.initFunction = initFunction;
+exports.computeOffset = computeOffset;
 
 function getCoords(elem) {
   var box = elem.getBoundingClientRect();
@@ -21,6 +22,22 @@ function getCoords(elem) {
   return {
     top: Math.round(top),
     left: Math.round(left)
+  };
+}
+
+function computeOffset(element) {
+  var offsetLeft = element.offsetLeft;
+  var offsetTop = element.offsetTop;
+
+  if (element.offsetParent) {
+    var parentOffset = computeOffset(element.offsetParent);
+    offsetLeft += parentOffset.offsetLeft;
+    offsetTop += parentOffset.offsetTop;
+  }
+
+  return {
+    offsetLeft: offsetLeft,
+    offsetTop: offsetTop
   };
 }
 
@@ -486,6 +503,7 @@ prototype.compute = function (element) {
   var uinque = this.getUniqueId(element);
   var viewPosition = element.getBoundingClientRect();
   var inView = viewPosition.left > 0 && viewPosition.left < window.innerWidth && viewPosition.top > 0 && viewPosition.top < window.innerHeight;
+  var offset = (0, _helper.computeOffset)(element);
   var result = {
     wid: uinque.wid,
     type: uinque.type,
@@ -494,7 +512,9 @@ prototype.compute = function (element) {
     viewLeft: viewPosition.left,
     viewTop: viewPosition.top,
     text: element.innerText,
-    visible: inView
+    visible: inView,
+    offsetBodyTop: offset.offsetTop,
+    offsetBodyLeft: offset.offsetLeft
   };
   return result;
 };

@@ -11,6 +11,22 @@ function getCoords(elem) {
     return { top: Math.round(top), left: Math.round(left) };
 }
 
+function computeOffset(element) {
+    let offsetLeft = element.offsetLeft;
+    let offsetTop = element.offsetTop;
+
+    if(element.offsetParent){
+        const parentOffset = computeOffset(element.offsetParent);
+        offsetLeft += parentOffset.offsetLeft;
+        offsetTop += parentOffset.offsetTop;
+    }
+
+    return{
+        offsetLeft: offsetLeft,
+        offsetTop: offsetTop,
+    }
+}
+
 function initFunction(){
     var init =  function (argument) {
         this.options = Object.assign({},{
@@ -55,5 +71,6 @@ function simpleFyId(wid) {
 export {
     simpleFyId,
     getCoords,
-    initFunction
+    initFunction,
+    computeOffset
 }

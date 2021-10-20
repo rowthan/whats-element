@@ -2,7 +2,7 @@
  * Created by rowthan on 2017/12/9.
  * 包含核心 api 获取id,获取元素，不含UI
  */
-import {getCoords,initFunction,simpleFyId} from "./helper";
+import {computeOffset, getCoords, initFunction, simpleFyId} from "./helper";
 var document = window.document,noop = function(){},
 whatsElementPure = initFunction(),
 prototype = whatsElementPure.prototype
@@ -249,6 +249,7 @@ prototype.compute = function(element){
     var viewPosition = element.getBoundingClientRect();
     var inView = viewPosition.left>0 && viewPosition.left < window.innerWidth && viewPosition.top>0 && viewPosition.top<window.innerHeight;
 
+    var offset = computeOffset(element);
     var result = {
         wid: uinque.wid,
         type: uinque.type,
@@ -258,6 +259,8 @@ prototype.compute = function(element){
         viewTop: viewPosition.top,
         text: element.innerText,
         visible: inView,
+        offsetBodyTop: offset.offsetTop,
+        offsetBodyLeft: offset.offsetLeft,
     };
     return result;
 };
