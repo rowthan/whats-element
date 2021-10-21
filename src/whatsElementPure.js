@@ -37,14 +37,22 @@ prototype.getUniqueId = function (element,isParent) {
     }
     //locate by id
     if(id && document.getElementById(id) === element){
-        var regExp= new RegExp("^[a-zA-Z]+") ;
         /**当不为parent定位，且设置为简单结果时，直接返回id 否则使用完整路径标识符。注：两个if顺序不能更换，递归调用时 simpleId为undefined*/
         if(!isParent && this.options.simpleId){
             result.wid = id;
         }
         /*如果为parent定位，或者设置为完整结果时候，返回tag#id*/
-        else if(regExp.test(id)){
-            result.wid = tag+"#"+id
+        else {
+            const queryTag = tag+"#"+id;
+            try{
+                const queryResult = document.querySelector(queryTag);
+                if(queryResult === element){
+                    result.wid = queryTag;
+                }
+            }catch (e) {
+                console.log('id 不合法')
+            }
+
         }
         result.type = "document.getElementById()"
     }
@@ -238,7 +246,7 @@ prototype.getTarget = function (queryString,type,root) {
                     || this.getTarget(queryString,'document.querySelector()')
         }
     }catch (e) {
-        console.error(e);
+        console.error('定位ID不合法',e);
     }
     return result;
 };
