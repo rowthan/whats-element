@@ -4,10 +4,10 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.simpleFyId = simpleFyId;
+exports.computeOffset = computeOffset;
 exports.getCoords = getCoords;
 exports.initFunction = initFunction;
-exports.computeOffset = computeOffset;
+exports.simpleFyId = simpleFyId;
 
 function getCoords(elem) {
   var box = elem.getBoundingClientRect();
@@ -142,15 +142,23 @@ prototype.getUniqueId = function (element, isParent) {
 
 
   if (id && document.getElementById(id) === element) {
-    var regExp = new RegExp("^[a-zA-Z]+");
     /**当不为parent定位，且设置为简单结果时，直接返回id 否则使用完整路径标识符。注：两个if顺序不能更换，递归调用时 simpleId为undefined*/
-
     if (!isParent && this.options.simpleId) {
       result.wid = id;
     }
     /*如果为parent定位，或者设置为完整结果时候，返回tag#id*/
-    else if (regExp.test(id)) {
-      result.wid = tag + "#" + id;
+    else {
+      var queryTag = tag + "#" + id;
+
+      try {
+        var queryResult = document.querySelector(queryTag);
+
+        if (queryResult === element) {
+          result.wid = queryTag;
+        }
+      } catch (e) {
+        console.log('id 不合法');
+      }
     }
 
     result.type = "document.getElementById()";
@@ -184,9 +192,8 @@ prototype.getUniqueId = function (element, isParent) {
   }
 
   if (!result.wid && tag === 'a') {
-    var _element$attributes$h;
-
-    var href = (_element$attributes$h = element.attributes.href) === null || _element$attributes$h === void 0 ? void 0 : _element$attributes$h.value;
+    var hrefAttr = element.attributes.href;
+    var href = hrefAttr ? hrefAttr.value : '';
 
     if (href) {
       queryString = "a[href='" + href + "']";
@@ -378,7 +385,7 @@ prototype.getTarget = function (queryString, type, root) {
         result = this.getTarget(queryString, 'document.getElementById()') || this.getTarget(queryString, 'document.getElementsByName()') || this.getTarget(queryString, 'document.querySelector()');
     }
   } catch (e) {
-    console.error(e);
+    console.error('定位ID不合法', e);
   }
 
   return result;

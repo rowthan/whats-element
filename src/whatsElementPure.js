@@ -78,7 +78,8 @@ prototype.getUniqueId = function (element,isParent) {
         }
     }
     if(!result.wid && tag === 'a'){
-        var href = element.attributes.href?.value;
+        var hrefAttr = element.attributes.href;
+        var href = hrefAttr? hrefAttr.value : '';
         if(href){
             queryString = "a[href='"+href+"']";
             var selectedEl = document.querySelector(queryString);

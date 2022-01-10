@@ -1,10 +1,9 @@
 {
   "name": "whats-element",
-  "version": "2.4.4",
+  "version": "2.4.6",
   "description": "a tool can compute a unique string identity id to location everyone element in web page.",
   "main": "index.js",
   "scripts": {
-    "preinstall": "npm install",
     "publish_npm": "npm publish",
     "build": "gulp release",
     "dev": "gulp watch"
