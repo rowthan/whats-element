@@ -1,5 +1,4 @@
 export const SPLIT_MODE_CODE = '  '
-export const PARENT_MODE_CODE_LENGTH = 2
 
 export enum QueryTypes {
     // 通过ID查找

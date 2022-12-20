@@ -1,4 +1,4 @@
-import {PARENT_MODE_CODE_LENGTH, QueryTypes, SPLIT_MODE_CODE} from "../const";
+import { QueryTypes, SPLIT_MODE_CODE} from "../const";
 import {findFirstLevelChildren} from "../utils/helper";
 
 
@@ -24,7 +24,7 @@ export default function getTarget(queryString: string, type?: QueryTypes, root?:
     }
 
     // TODO 支持跨层级计算，如祖父节点定位 2、3、4 分别代表父节点、祖父、曾祖父节点定位； 通过三级 * 跨级 实现贯穿至 body 节点的定位
-    const regex = new RegExp('\s{'+PARENT_MODE_CODE_LENGTH+'}');
+    const regex = new RegExp(`\\s{${SPLIT_MODE_CODE.length}}`);
     const splitedSelector = query.split(regex);
     if(!type){
         if(splitedSelector.length>1){
