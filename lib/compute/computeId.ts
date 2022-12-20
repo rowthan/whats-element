@@ -12,6 +12,8 @@ export interface ClassFilter {
     maxLength?: number
 }
 
+// 一些非法的class名，不可作为定位符
+const BASIC_BLOCK_CLASS_RULES = [/[:\[\]\.]/,/\//,/^\d+/]
 export function getElementClass(element: HTMLElement, classFilter?:ClassFilter) {
     let className = "";
     for(let i=0; i<element.classList.length; i++){
@@ -24,22 +26,23 @@ export function getElementClass(element: HTMLElement, classFilter?:ClassFilter) 
             continue
         }
         let blocked = false;
-        if(classFilter?.blockClassList){
-            for(let j=0; j<classFilter.blockClassList.length;j++){
-                const tempNameOrRule = classFilter.blockClassList[j];
-                if(typeof tempNameOrRule === 'string'){
-                    if(tempNameOrRule === item){
-                        blocked = true;
-                        break;
-                    }
-                }else{
-                    if(tempNameOrRule.test(item)){
-                        blocked = true;
-                        break;
-                    }
+        const blockList = [...BASIC_BLOCK_CLASS_RULES,...(classFilter?.blockClassList||[])]
+
+        for(let j=0; j<blockList.length;j++){
+            const tempNameOrRule = blockList[j];
+            if(typeof tempNameOrRule === 'string'){
+                if(tempNameOrRule === item){
+                    blocked = true;
+                    break;
+                }
+            }else{
+                if(tempNameOrRule.test(item)){
+                    blocked = true;
+                    break;
                 }
             }
         }
+
         if(blocked){
             continue
         }
@@ -71,6 +74,10 @@ export function getById(element: HTMLElement):WhatsUniqueResult|null {
     const id = element.id;
     if(!id){
         return null
+    }
+    // id 含有特殊字符 . 不可用
+    if(/\./.test(id)){
+        return null;
     }
 
     const tag = element.tagName.toLowerCase();
