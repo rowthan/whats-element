@@ -186,17 +186,15 @@ export function getByIndex(element: HTMLElement, classFilter: ClassFilter):Whats
             }
         }
         if(index){
-            // TODO nth-of-type 代替 nth-of 也不是完美的解决方案， 需要自定义一个全局查找的工具语法 :nth-index(); 作为配置项
-            queryString = queryString + ":nth-of-type("+index+")";
-            const checkTarget = getTarget(queryString,QueryTypes.bySelector).target;
-            if(checkTarget === element){
+            queryString = queryString + ":nth-child("+index+")"
+            if(getTarget(queryString,QueryTypes.bySelector).target === element){
                 return {
                     wid: queryString,
                     type: QueryTypes.bySelector
                 }
             }else{
                 // const checkTarget = getTarget(queryString,QueryTypes.bySelector).target;
-                console.warn(checkTarget,'computeid 不匹配',queryString, element)
+                console.warn('computeid 不匹配',queryString, element)
             }
         }
     }
@@ -243,8 +241,8 @@ export function getByParent(element: HTMLElement, parentQueryString?: String | n
         }
     }
 
-    /**构造序列号的选择器 TODO 这里改为 nth-type(n)-*/
-    const queryByIndex = (queryString +  ":nth-of-type("+index+")").trim();
+    /**构造序列号的选择器*/
+    const queryByIndex = queryString +  ":nth-child("+index+")";
     if(getTarget(queryByIndex,QueryTypes.bySplit).target === element){
         return {
             wid: queryByIndex,
