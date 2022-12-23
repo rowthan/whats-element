@@ -1,7 +1,27 @@
 import './style.css'
 import WhatsElement from "../lib";
+// @ts-ignore 使用一个 HTML 页面，遍历所有节点，用于自动化测试验证 wid 准确性
+import content from './page_test/tailwindcss.html?raw'
 // @ts-ignore
-import content from './page_test/github.html?raw'
+import github from './page_test/github.html?raw'
+// @ts-ignore
+import tailwind from './page_test/tailwind.html?raw'
+
+const pages: Record<string, string> = {
+    github: github,
+    tailwind: tailwind,
+    css: content,
+}
+
+
+const search = new URLSearchParams(window.location.search);
+const type = search.get('html') || '';
+const html = pages[type] || pages.github;
+
+let links = ``
+for(let i in pages){
+    links += `<a href="/?html=${i}">${i}</a>`
+}
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div style=";">
@@ -16,8 +36,9 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
             background: pink;
         }
     </style>
+    ${links}
     <div id="result"></div>
-    ${content}
+    ${html}
   </div>
 `
 
@@ -32,6 +53,8 @@ const whats = window.whats = new WhatsElement({
 
 document.getElementById('container')
 
+let success = 0;
+let fail = 0;
 function autoTest(root: HTMLElement = document.body) {
     if(!root.children){
         return;
@@ -41,25 +64,38 @@ function autoTest(root: HTMLElement = document.body) {
         const result = whats.getUniqueId(<HTMLElement>tempItem);
         if(!result.wid){
             console.warn('此元素计算失败')
-            console.log(tempItem)
+            fail++
+            // console.log('成功率',success / (success + fail));
         }else{
-            // console.log('success',result.wid);
+            const element = whats.getTarget(result.wid);
+            if(element.target!==tempItem){
+                console.warn('二次校验不通过',element,tempItem,result.wid)
+                // console.log('成功率',success / (success + fail));
+                fail++
+            }else{
+                success++
+            }
+
+
+            // console.log(success / (success + fail),'成功',result.wid)
             if(tempItem.children){
                 for(let j=0; j<tempItem.children.length; j++){
                     autoTest(<HTMLElement>tempItem.children[j])
                 }
             }
         }
+        console.log('成功率',success / (success + fail));
+
     }
 }
 
 setTimeout(function () {
     autoTest()
-},4000)
+},2000)
 
 document.addEventListener('click',function (event) {
-    event.stopPropagation();
-    event.preventDefault();
+    // event.stopPropagation();
+    // event.preventDefault();
     const result = whats.getUniqueId(<HTMLElement>event.target);//event.target
     const target = whats.getTarget(result.wid || 'body');
     if(target.target !== event.target){
@@ -69,10 +105,8 @@ document.addEventListener('click',function (event) {
         console.log('通过结果查找对象',target.target,target.nearest)
     }else{
         console.log('计算成功',result.wid)
-        console.log('链路',whats.getTargetLine(result.wid || ''))
         console.log('根节点',whats.getTarget((result.wid || '')?.split('  ')[0]).target)
     }
-
 
     const resultRoot = document.getElementById('result');
     if(resultRoot){
