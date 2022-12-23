@@ -110,7 +110,7 @@ export function getByName(element: HTMLElement | HTMLInputElement):WhatsUniqueRe
     const tag = getElementTag(element)
     const name = "name" in element ? element.name : '';
     const query = name ? `${tag}[name="${name}"]` : ''
-    if(query && getTarget(query,QueryTypes.byName)){
+    if(query && getTarget(query,QueryTypes.byName).target === element){
         return{
             wid: query,
             type: QueryTypes.byName
