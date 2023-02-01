@@ -1,7 +1,6 @@
 {
   "name": "whats-element",
-  "private": true,
-  "version": "0.0.0",
+  "version": "3.0.0-rc.a",
   "type": "module",
   "files": [
     "dist"
@@ -16,7 +15,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && tsc -p ./tsconfig.json -emitDeclarationOnly"
+    "build": "vite build && tsc -p ./tsconfig.json -emitDeclarationOnly",
+    "publish-npm": "npm run build && npm publish --access public"
   },
   "devDependencies": {
     "typescript": "^4.8.3",

@@ -74,7 +74,6 @@ export default class WhatsElement {
     const result: HTMLElement[] = [];
     for(let i=0; i<queryStringArray.length; i++){
       const tempQuery = (queryStringArray.slice(0,i+1).join(SPLIT_MODE_CODE)).trim();
-      console.log('tempquery',tempQuery,queryStringArray)
       if(!tempQuery){
         continue
       }
