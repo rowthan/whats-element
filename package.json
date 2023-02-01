@@ -1,6 +1,6 @@
 {
   "name": "whats-element",
-  "version": "3.0.0-rc.a",
+  "version": "3.0.0-rc.b",
   "type": "module",
   "files": [
     "dist"

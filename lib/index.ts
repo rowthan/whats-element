@@ -15,18 +15,7 @@ export default class WhatsElement {
   }
 
   getTarget(queryString: string, type?: QueryTypes, root?: HTMLElement | Document): TargetElement{
-    let result: TargetElement = {
-      target: null,
-      nearest: document.body,
-      error: ''
-    }
-    try{
-      result = getTarget(queryString,type,root)
-    }catch (e) {
-      result.error = `${queryString} ${type} 查找失败，请联系开发者`
-      console.error(queryString,'查找异常,请联系开发者',e)
-    }
-    return result
+    return getTarget(queryString,type,root)
   }
 
   getUniqueId(element: HTMLElement,minDeep=this.option.minDeep): WhatsUniqueResult{

@@ -42,7 +42,11 @@ export default function getTarget(queryString: string, type?: QueryTypes, root?:
             target = "getElementsByName" in findRoot ? findRoot.getElementsByName(queryString)[0] : null;
             break;
         case QueryTypes.bySelector:
-            target = findRoot.querySelector ? findRoot.querySelector(queryString) : null;
+            try{
+                target = findRoot.querySelector ? findRoot.querySelector(queryString) : null;
+            }catch (e) {
+                console.warn(e,queryString)
+            }
             break;
         /**whats-element 扩展的查找方法**/
         case QueryTypes.bySplit:

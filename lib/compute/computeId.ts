@@ -194,7 +194,6 @@ export function getByIndex(element: HTMLElement, classFilter: ClassFilter):Whats
                 }
             }else{
                 // const checkTarget = getTarget(queryString,QueryTypes.bySelector).target;
-                console.warn('computeid 不匹配',queryString, element)
             }
         }
     }
