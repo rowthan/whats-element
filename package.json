@@ -1,25 +1,12 @@
 {
   "name": "whats-element",
-  "version": "3.0.0-rc.b",
-  "type": "module",
-  "files": [
-    "dist"
-  ],
-  "main": "./dist/index.umd.cjs",
-  "module": "./dist/index.js",
-  "types": "./index.d.ts",
-  "exports": {
-    "types": "./index.d.ts",
-    "import": "./dist/index.js",
-    "require": "./dist/index.umd.cjs"
-  },
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build && tsc -p ./tsconfig.json -emitDeclarationOnly",
-    "publish-npm": "npm run build && npm publish --access public"
-  },
-  "devDependencies": {
-    "typescript": "^4.8.3",
-    "vite": "^3.1.3"
-  }
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:rowthan/whats-element.git",
+  "author": "rowthan <12638456+rowthan@users.noreply.github.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
 }
