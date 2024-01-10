@@ -1,9 +1,10 @@
 import getTarget from "./target";
-import {getUniqueId} from "./compute";
+import {getUniqueId} from "./uniqueId";
+import {compute} from "./compute";
 import {QueryTypes, SPLIT_MODE_CODE} from "./const";
-import type {ClassFilter, TargetElement, WhatsUniqueResult} from "./typing";
-import {getKeyStyles, makeRangesForElement} from "./compute/dna";
+import {getKeyStyles, makeRangesForElement} from "./dna/dna";
 import {getDefaultOption} from "./const/data";
+import type {ClassFilter, WhatsUniqueResult} from "./typing";
 
 interface Option {
     ignoreClassRule?: ClassFilter
@@ -15,22 +16,8 @@ export default class WhatsElement {
         this.option = option
     }
 
-    getTarget(queryString: string, type?: QueryTypes, root?: HTMLElement | Document): TargetElement{
+    getTarget(queryString: string, type?: QueryTypes, root?: HTMLElement | Document){
         return getTarget(queryString,type,root)
-    }
-
-    /**
-     * 获取一个可以作为 element 比对基因的标识
-     * 包含自身节点的采样：text内容，样式宽高布局、位于整个document的布局位置。
-     * 这些信息有利于二次比对，当 uniqueId 变化后的关键信息
-     * */
-    getElementDNA(element: HTMLElement){
-
-        return {
-            ranges: makeRangesForElement(element),
-            styles: getKeyStyles(element),
-            fragments: []
-        }
     }
 
     /**
@@ -51,6 +38,14 @@ export default class WhatsElement {
         }
     }
 
+    compute(element: HTMLElement){
+        const uniqueId = this.getUniqueId(element);
+        return {
+            ...compute(element),
+            ...uniqueId,
+        }
+    }
+
     /**
      * 根据wid,查询DOM链
      * 返回可追溯目的元素 过程中的 所有 DOM 节点。最大程度的找到 目的元素的最小范围。缩小目标范围。
@@ -60,18 +55,31 @@ export default class WhatsElement {
             return []
         }
         const queryStringArray = queryString.trim().split(SPLIT_MODE_CODE);
-        const result: HTMLElement[] = [];
+        const result = [];
         for(let i=0; i<queryStringArray.length; i++){
             const tempQuery = (queryStringArray.slice(0,i+1).join(SPLIT_MODE_CODE)).trim();
             if(!tempQuery){
                 continue
             }
             const tempTarget = this.getTarget(tempQuery,i===0? undefined : QueryTypes.bySplit)
-            if(tempTarget.target){
-                result.push(tempTarget.target)
+            if(tempTarget){
+                result.push(tempTarget)
             }
         }
         return result
+    }
+
+    /**
+     * 获取一个可以作为 element 比对基因的标识
+     * 包含自身节点的采样：text内容，样式宽高布局、位于整个document的布局位置。
+     * 这些信息有利于二次比对，当 uniqueId 变化后的关键信息
+     * */
+    getDNA(element: HTMLElement){
+        return {
+            ranges: makeRangesForElement(element),
+            styles: getKeyStyles(element),
+            fragments: []
+        }
     }
 }
 

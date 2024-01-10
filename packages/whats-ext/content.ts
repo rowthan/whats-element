@@ -1,6 +1,6 @@
 import WhatsElement from "../whats-element/src/index";
 // import skeletonElement from "~packages/skeleton/skeleton";
-import {getFragmentsFromLeafElement} from "../whats-element/src/compute/dna";
+import {getFragmentsFromLeafElement} from "../whats-element/src/dna/dna";
 
 export {}
 

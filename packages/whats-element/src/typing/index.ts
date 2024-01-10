@@ -1,11 +1,5 @@
 import {QueryTypes} from "../const";
 
-export interface TargetElement {
-    target: HTMLElement | null,
-    nearest: HTMLElement | Document,
-    error: string
-}
-
 export type Range = {
     offset: number,
     text: string

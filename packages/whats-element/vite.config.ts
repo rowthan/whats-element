@@ -5,7 +5,7 @@ export default defineConfig({
     lib: {
       entry: './src/index.ts',
       name: 'WhatsElement',
-      fileName: 'index'
+      fileName: 'whatsElement.js'
     }
   }
 })

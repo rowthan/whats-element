@@ -1,4 +1,4 @@
-import {getElementClass} from "../compute/computeId";
+import {getElementClass} from "../uniqueId/computeId";
 import {getValidIdForElement} from "../utils/element";
 
 export function checkCanBeFragmentNode(element: HTMLElement) {

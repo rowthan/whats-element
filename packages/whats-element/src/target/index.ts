@@ -1,21 +1,16 @@
 import {QueryTypes, SPLIT_MODE_CODE} from "../const";
-import type {TargetElement} from "../typing";
 
 
 /**
  * 基于 wid 查找 dom 节点
  * */
-export default function getTarget(queryString: string | undefined = '', type?: QueryTypes, root?: HTMLElement | Document | null): TargetElement{
+export default function getTarget(queryString: string | undefined = '', type?: QueryTypes, root?: HTMLElement | Document | null): HTMLElement | null{
     const query = queryString ? queryString.trim() : '';
     const findRoot: HTMLElement | Document = root || document;
 
     if(!query || !findRoot){
         console.trace('wid 或 根节点不存在',query,findRoot)
-        return {
-            target:null,
-            nearest: findRoot,
-            error: 'wid 或 根节点不存在'
-        }
+        return null
     }
 
     // const regex = new RegExp(`${SPLIT_MODE_CODE}`);
@@ -26,11 +21,7 @@ export default function getTarget(queryString: string | undefined = '', type?: Q
         }
     }
 
-    // if(queryString==='a#navbtn_exercises > i.fa.fa-caret-down'){
-    //     debugger
-    // }
     let target: HTMLElement | null = null;
-    let nearest = findRoot
     switch (type){
         case QueryTypes.byId:
             target = "getElementById" in findRoot ? target = findRoot.getElementById(queryString) : null
@@ -60,11 +51,10 @@ export default function getTarget(queryString: string | undefined = '', type?: Q
             let root: Document | HTMLElement = document;
             /**逐级查找*/
             for(let i=0;i<selectors.length; i++){
-                let tempNode = getTarget(selectors[i],undefined,root);
-                if(tempNode.target){
-                    target = tempNode.target
-                    nearest = tempNode.target;
-                    root = tempNode.target
+                const tempNode = getTarget(selectors[i],undefined,root);
+                if(tempNode){
+                    target = tempNode
+                    root = tempNode
                 }else{
                     break;
                 }
@@ -95,25 +85,17 @@ export default function getTarget(queryString: string | undefined = '', type?: Q
             break;
         default:
             /**未指定type的情况下，按优先级查找*/
-            const result = getTarget(queryString, QueryTypes.byId,findRoot).target
-                || getTarget(queryString, QueryTypes.byName,findRoot).target
-                || getTarget(queryString,QueryTypes.bySelector,findRoot).target;
+            const result = getTarget(queryString, QueryTypes.byId,findRoot)
+                || getTarget(queryString, QueryTypes.byName,findRoot)
+                || getTarget(queryString,QueryTypes.bySelector,findRoot);
 
             if(result){
-                return {
-                    target: result,
-                    nearest: nearest,
-                    error: ''
-                }
+                return result
             }else{
                 return getTarget(queryString, QueryTypes.byId, findRoot)
             }
     }
 
     // TODO 正向查找不到的情况下，进行反向查找，避免因为父节点的DOM 变动导致子节点无法被定位，存在多个节点的时候，按照深度优先返回最终结果。
-    return {
-        nearest: nearest,
-        target: target,
-        error: ''
-    };
+    return target
 }
