@@ -4,8 +4,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: './src/index.ts',
-      name: 'WhatsElement',
-      fileName: 'whatsElement.js'
+      name: 'WhatsElementV2',
+      fileName: 'whatsElement'
     }
   }
 })

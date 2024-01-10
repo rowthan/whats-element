@@ -16,6 +16,10 @@ export default class WhatsElement {
         this.option = option
     }
 
+    static getTarget(queryString: string, type?: QueryTypes, root?: HTMLElement | Document){
+        return getTarget(queryString,type,root)
+    }
+
     getTarget(queryString: string, type?: QueryTypes, root?: HTMLElement | Document){
         return getTarget(queryString,type,root)
     }
@@ -36,6 +40,10 @@ export default class WhatsElement {
                 type: null,
             }
         }
+    }
+
+    static getUniqueId(element: HTMLElement){
+        return getUniqueId(element)
     }
 
     compute(element: HTMLElement){
