@@ -28,6 +28,12 @@ export default class WhatsElement {
      * 指定一个元素，计算出可以定位到该元素的唯一特征描述
      * */
     getUniqueId(element: HTMLElement): WhatsUniqueResult{
+        if(!element){
+            return {
+                wid: null,
+                type: null,
+            }
+        }
         /**
          * 该元素的特征描述
          * */
@@ -47,6 +53,9 @@ export default class WhatsElement {
     }
 
     compute(element: HTMLElement){
+        if(!element){
+            return {}
+        }
         const uniqueId = this.getUniqueId(element);
         return {
             ...compute(element),

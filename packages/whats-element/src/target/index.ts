@@ -6,11 +6,16 @@ import {QueryTypes, SPLIT_MODE_CODE} from "../const";
  * */
 export default function getTarget(queryString: string | undefined = '', type?: QueryTypes, root?: HTMLElement | Document | null): HTMLElement | null{
     const query = queryString ? queryString.trim() : '';
-    const findRoot: HTMLElement | Document = root || document;
+    // @ts-ignore
+    const findRoot: HTMLElement | Document = root || document || document.documentElement;
 
-    if(!query || !findRoot){
-        console.trace('wid 或 根节点不存在',query,findRoot)
-        return null
+    if(!query){
+        console.error('wid 不可为空',query)
+        return null;
+    }
+    if(!findRoot){
+        console.trace('根节点不可为空',findRoot, queryString)
+        return null;
     }
 
     // const regex = new RegExp(`${SPLIT_MODE_CODE}`);
@@ -32,10 +37,11 @@ export default function getTarget(queryString: string | undefined = '', type?: Q
         case QueryTypes.bySelector:
             // 这里应该用 querySelectorAll 来判断是否具备唯一性
             try{
-                const matchedList = findRoot.querySelectorAll ? findRoot.querySelectorAll(queryString) : [];
-                if(matchedList && matchedList.length === 1){
-                    target = matchedList[0] as HTMLElement;
-                }
+                // const matchedList = findRoot.querySelectorAll ? findRoot.querySelectorAll(queryString) : [];
+                // if(matchedList && matchedList.length === 1){
+                //     target = matchedList[0] as HTMLElement;
+                // }
+                target = findRoot.querySelector(queryString) as HTMLElement;
                 // if(matchedList.length>1){
                 //     console.warn('存在多个满足', matchedList)
                 // }

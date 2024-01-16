@@ -245,7 +245,7 @@ export function getByIndex(element: HTMLElement, classFilter: ClassFilter, paren
             }else{
                 console.log('queryString',queryStringWithIndex)
                 console.log('checkResult',checkResult)
-                console.log(element,'校验失败')
+                console.log(element,'校验失败',checkResult,document.querySelector(queryStringWithIndex))
                 console.log(elements,'elements')
                 console.log(element.parentElement,'root')
                 // const find = element.parentElement.querySelectorAll(queryString);
