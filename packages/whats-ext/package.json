@@ -1,0 +1,33 @@
+{
+  "name": "example-dir",
+  "displayName": "Example dir",
+  "version": "0.0.1",
+  "description": "pick-html",
+  "author": "rowthan",
+  "scripts": {
+    "dev": "node_modules/.bin/plasmo dev",
+    "build-ext": "node_modules/.bin/plasmo build",
+    "test": "node_modules/.bin/plasmo test",
+    "build": ".node_modules/.bin/vite build"
+  },
+  "dependencies": {
+    "plasmo": "0.84.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "4.1.1",
+    "@types/chrome": "0.0.251",
+    "@types/node": "20.9.0",
+    "@types/react": "18.2.37",
+    "@types/react-dom": "18.2.15",
+    "prettier": "3.0.3",
+    "typescript": "5.2.2",
+    "vite": "^3.1.3"
+  },
+  "manifest": {
+    "host_permissions": [
+      "https://*/*"
+    ]
+  }
+}
